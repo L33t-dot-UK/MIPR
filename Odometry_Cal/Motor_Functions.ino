@@ -1,7 +1,7 @@
 /*
 //Author David Bradshaw
 //Contains all motor funtions
-//
+//Visit https://www.l33t.uk/MIPR for more information
 */
 
 void Forwards(int leftSpeed, int rightSpeed)
