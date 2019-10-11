@@ -9,7 +9,7 @@ void setup()
 {
 }
 
-void loop() 
+void loop()  //This will move the robot forwards, backwards, left and then right.
 {
     Forwards(254,254);
     delay(2000);
