@@ -1,5 +1,5 @@
 /*
- * Motor Functions Module Verison 0.3
+ * Motor Functions Module Verison 0.4
  * https://www.l33t.uk/arduino_projects/mipr/
  * Copyright David Bradshaw 2019
  */
