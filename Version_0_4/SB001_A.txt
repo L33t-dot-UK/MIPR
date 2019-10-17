@@ -1,0 +1,149 @@
+Telemetry Viewer File Format v0.4
+
+Grid Settings:
+
+	column count = 8
+	row count = 8
+
+Serial Port Settings:
+
+	port = COM26
+	baud = 57600
+	packet type = ASCII CSVs
+	sample rate = 10000
+
+7 Data Structure Locations:
+
+	location = 0
+	processor index = -1
+	name = Distance
+	color = 0xFF0000
+	unit = mm
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 1
+	processor index = -1
+	name = Left LDR
+	color = 0x0000CC
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 2
+	processor index = -1
+	name = Right LDR
+	color = 0xCCCC00
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 3
+	processor index = -1
+	name = Left Velocity
+	color = 0xFF0033
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 4
+	processor index = -1
+	name = Right Velocity
+	color = 0x006666
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 5
+	processor index = -1
+	name = Battery Voltage
+	color = 0x00FF00
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 6
+	processor index = -1
+	name = Loop Time
+	color = 0x006699
+	unit = mS
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+4 Charts:
+
+	chart type = Dial Chart
+	top left x = 6
+	top left y = 5
+	bottom right x = 7
+	bottom right y = 7
+	datasets = 5
+	sample count = 1000
+	autoscale minimum = true
+	manual minimum = -1.0
+	autoscale maximum = true
+	manual maximum = 1.0
+	show reading label = true
+	show dataset label = true
+	show min max labels = true
+	show statistics = true
+
+	chart type = Time Domain Chart
+	top left x = 0
+	top left y = 5
+	bottom right x = 5
+	bottom right y = 7
+	datasets = 0
+	sample count = 1000
+	autoscale y-axis minimum = false
+	manual y-axis minimum = 0.0
+	autoscale y-axis maximum = false
+	manual y-axis maximum = 2000.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Histogram Chart
+	top left x = 0
+	top left y = 0
+	bottom right x = 1
+	bottom right y = 4
+	datasets = 5,6
+	sample count = 1000
+	bin count = 60
+	x-axis is centered = false
+	x-axis center value = 0.0
+	x-axis autoscale minimum = true
+	x-axis manual minimum = -1.0
+	x-axis autoscale maximum = true
+	x-axis manual maximum = 1.0
+	y-axis shows relative frequency = true
+	y-axis shows frequency = false
+	y-axis minimum is zero = true
+	y-axis autoscale maximum = true
+	y-axis manual minimum = 0.0
+	y-axis manual maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Time Domain Chart
+	top left x = 2
+	top left y = 0
+	bottom right x = 7
+	bottom right y = 4
+	datasets = 1,2,3,4
+	sample count = 1000
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
