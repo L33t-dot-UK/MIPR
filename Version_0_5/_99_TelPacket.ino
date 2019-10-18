@@ -13,9 +13,11 @@ void build_Tel_Packet()
         if (isFirst == true)
         {
             //stop the motors and rest for 10 seconds allowing the load to be taken off the battery
+            digitalWrite(13, HIGH); //Turn on the Arduino's LED indicating that the robot is resting for 10 seconds
             halt();
             delay(10000);
             isFirst = false;
+            digitalWrite(13, LOW);
         }
         else
         {
