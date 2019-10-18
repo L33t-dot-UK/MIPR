@@ -78,3 +78,22 @@ void basicPathFinder(int minDistance)
     }
     
 }
+
+//A simple algorith that tells MIPR to maintain distance from a target
+void followMode(int targetDistance)
+{
+    int distance = getDist();
+    
+    if (distance > targetDistance)
+    {
+        Forwards(96,96);   
+    }
+    else if (distance < targetDistance)
+    {
+        Backwards(96,96);
+    }
+    else
+    {
+        halt();
+    } 
+}
