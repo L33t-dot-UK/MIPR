@@ -94,6 +94,6 @@ void followMode(int targetDistance)
     }
     else
     {
-        halt();
+        Halt();
     } 
 }
