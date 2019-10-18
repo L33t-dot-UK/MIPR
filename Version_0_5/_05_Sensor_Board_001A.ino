@@ -83,14 +83,27 @@ void basicPathFinder(int minDistance)
 void followMode(int targetDistance)
 {
     int distance = getDist();
+    int diff = 0;
+
+    if (distance > targetDistance)
+    {
+        diff = distance - targetDistance;
+    }
+    else
+    {
+         diff = targetDistance - distance;
+    }
+
+    if (diff > 256){diff = 255;}
+    if (diff < 32) {diff = 36;}
     
     if (distance > targetDistance)
     {
-        Forwards(96,96);   
+        Forwards(diff,diff);   
     }
     else if (distance < targetDistance)
     {
-        Backwards(96,96);
+        Backwards(diff,diff);
     }
     else
     {
