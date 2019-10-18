@@ -71,7 +71,7 @@ void loop()
     else if(opMode == '4')
     {
         //Follow object mode
-        follow(200);
+        followMode(200);
     }
     else
     {
