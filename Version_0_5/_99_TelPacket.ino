@@ -2,6 +2,7 @@
  * Copyright David Bradshaw 2019
  * 
  */
+boolean isFirst = true;
 
 void build_Tel_Packet()
 {
@@ -9,13 +10,21 @@ void build_Tel_Packet()
 
     if(OdoMod_Installed == true && battVoltage < 3.58)
     {
-        Serial.print("Battery Voltage too Low ");
-        Serial.print(battVoltage);
-        Serial.println(" Volts");
-        Halt();
-        speaker_on();
-        while(1){} //infinate loop so the robot will not respond
-    }
-
-    
+        if (isFirst == true)
+        {
+            //stop the motors and rest for 10 seconds allowing the load to be taken off the battery
+            halt();
+            delay(10000);
+            isFirst = false;
+        }
+        else
+        {
+            Serial.print("Battery Voltage too Low ");
+            Serial.print(battVoltage);
+            Serial.println(" Volts");
+            Halt();
+            speaker_on();
+            while(1){} //infinate loop so the robot will not respond
+        }
+    }    
 }
