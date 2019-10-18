@@ -9,7 +9,7 @@
 
 boolean OdoMod_Installed = true; //Change this to false if you do not have the odometry module installed
 String Tel_Packet = "";
-char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board
+char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board seek, 2 == LDR avoid, 3 == object sense, 4 == object follow
 
 int startTime = 0;
 int loopTime = 0;
@@ -67,6 +67,11 @@ void loop()
     {
         //The getDist call is below in the telPacketTimer if clause
         //This is so we don't request an update from the sensor too quickly
+    }
+    else if(opMode == '4')
+    {
+        //Follow object mode
+        follow(200);
     }
     else
     {
