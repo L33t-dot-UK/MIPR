@@ -79,7 +79,7 @@ void basicPathFinder(int minDistance)
     
 }
 
-//A simple algorith that tells MIPR to maintain distance from a target
+//A simple algorithm that tells MIPR to maintain distance from a target
 void followMode(int targetDistance)
 {
     int distance = getDist();
