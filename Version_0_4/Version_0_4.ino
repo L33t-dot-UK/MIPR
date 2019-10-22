@@ -82,7 +82,12 @@ void loop()
     build_Tel_Packet();
     if (telPacketTimer > telPacketRefresh)
     {
-       if(opMode == '3') {basicPathFinder(500);}
+       if(opMode == '3') 
+       {
+           basicPathFinder(500); //Set threshold to 500mm/50cm
+           SampleWaveForm(false); //calc velocity data from odo module
+           calc_Velocity();
+       }
        Serial.println(Tel_Packet);
        telStartTimer = millis();
     }
