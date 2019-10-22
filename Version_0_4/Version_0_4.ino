@@ -53,15 +53,20 @@ void loop()
     startTime = millis();
     if (opMode == '0')
     {
-        //Do Nothing
+        //get odo data and LDR data while in RC mode
+        SampleWaveForm(false); //calc velocity data from odo module
+        calc_Velocity();
+        get_Sensor_Values(); //set these values im case we want to use them
     }
     else if(opMode == '1')
     {
         Forwards(getMotorSpeed(true, true), getMotorSpeed(true, false));
+        //Odo data will be collected from the getMotorSpeed function
     }
     else if(opMode == '2')
     {
         Forwards(getMotorSpeed(true, false), getMotorSpeed(true, true));
+        //Odo data will be collected from the getMotorSpeed function
     }
     else if(opMode == '3')
     {
@@ -87,6 +92,7 @@ void loop()
            basicPathFinder(500); //Set threshold to 500mm/50cm
            SampleWaveForm(false); //calc velocity data from odo module
            calc_Velocity();
+           get_Sensor_Values(); //set these values im case we want to use them
        }
        Serial.println(Tel_Packet);
        telStartTimer = millis();
