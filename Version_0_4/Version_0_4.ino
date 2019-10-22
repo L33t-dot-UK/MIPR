@@ -53,9 +53,7 @@ void loop()
     startTime = millis();
     if (opMode == '0')
     {
-        //get odo data and LDR data while in RC mode
-        SampleWaveForm(false); //calc velocity data from odo module
-        calc_Velocity();
+        //Do Nothing
         get_Sensor_Values(); //set these values im case we want to use them
     }
     else if(opMode == '1')
@@ -72,6 +70,7 @@ void loop()
     {
         //The getDist call is below in the telPacketTimer if clause
         //This is so we don't request an update from the sensor too quickly
+         get_Sensor_Values(); //set these values im case we want to use them
     }
     else
     {
@@ -85,14 +84,12 @@ void loop()
     }
 
     build_Tel_Packet();
+    
     if (telPacketTimer > telPacketRefresh)
     {
        if(opMode == '3') 
        {
            basicPathFinder(500); //Set threshold to 500mm/50cm
-           SampleWaveForm(false); //calc velocity data from odo module
-           calc_Velocity();
-           get_Sensor_Values(); //set these values im case we want to use them
        }
        Serial.println(Tel_Packet);
        telStartTimer = millis();
