@@ -2,7 +2,7 @@
 
 # New Features in Version 0.5
 
-- Constant distance mode added name followMode in the code
+- Follow Mode added
 - Execute command mode added
 
 # Op Modes
@@ -14,7 +14,7 @@ Op Modes are as follows;
 - 1; Light Seeker
 - 2; Light Avoider
 - 3; Obstacle avoider
-- 4; Constant distance
+- 4; Follow Mode
 - 5; Execute command
 
 # File Breakdown;
