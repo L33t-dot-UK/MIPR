@@ -1,6 +1,6 @@
 # DO NOT USE; STILL IN DEVELOPMENT
 
-# New Features in Version 0.4
+# New Features in Version 0.5
 
 - Constant distance mode added name followMode in the code
 - Execute command mode added
