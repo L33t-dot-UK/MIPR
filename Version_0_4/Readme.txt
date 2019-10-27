@@ -1,3 +1,17 @@
+New Features in Verison 0.4
+
+-Code added for sensor board 001A giving MIPR the ability to detect obstacles
+
+Op Modes
+
+To chage the Op Mode open serial monitor and connect to MIPR type a capitol O for Oscar and then select the desiered Op Mode. 
+Op Modes are as follows;
+
+- 0; Remote controlled
+- 1; Light Seeker
+- 2; Light Avoider
+- 3; Obstacle avoider
+
 Once the code is uploaded to MIPR use Telemetry.jar and open the layout named SB001_A
 Once loaded this layout will try to connect to your robot and fail. If it fails select the
 correct comm port for your system and the correct baud rate then press connect.

@@ -9,7 +9,7 @@
 
 boolean OdoMod_Installed = true; //Change this to false if you do not have the odometry module installed
 String Tel_Packet = "";
-char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board
+char opMode = '0'; //Operating mode 0 == Remote control, 1 == Light Seek, 2 == Light Avoid, 3 == obstacle avoid
 
 int startTime = 0;
 int loopTime = 0;

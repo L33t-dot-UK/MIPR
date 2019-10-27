@@ -1,3 +1,20 @@
+New Features in Verison 0.3
+
+-The code is organised in different tabs to make it easier to read.
+-Odometry module added that gives battery voltage information and wheel speed info.
+-Sensor Board 001 code added goving MIPR the ability to detect light.
+-TelPacket code added to make it easier to create telemetry packets.
+-Motor funcitons and communicaiton functions have been put in there own tabs.
+
+Op Modes
+
+To chage the Op Mode open serial monitor and connect to MIPR type a capitol O for Oscar and then select the desiered Op Mode. 
+Op Modes are as follows;
+
+- 0; Remote controlled
+- 1; Light Seeker
+- 2; Light Avoider
+
 Once the code is uploaded to MIPR use Telemetry.jar and open the layout named SB001_TEL_A
 Once loaded this layout will try to connect to your robot and fail. If it fails select the
 correct comm port for your system and the correct baud rate then press connect. Once
