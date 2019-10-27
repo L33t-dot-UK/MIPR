@@ -58,7 +58,7 @@
         Serial.print(iString);
         Serial.println("Restarting MIPR in new mode");
         char mode = iString.charAt(0);
-        if (mode == '0' || mode == '1' || mode == '2' || mode == '3' || mode == '4')
+        if (mode == '0' || mode == '1' || mode == '2' || mode == '3' || mode == '4' || mode == '5')
         {
             //Do nothing
         }

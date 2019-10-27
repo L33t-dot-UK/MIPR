@@ -9,7 +9,7 @@
 
 boolean OdoMod_Installed = true; //Change this to false if you do not have the odometry module installed
 String Tel_Packet = "";
-char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board seek, 2 == LDR avoid, 3 == object sense, 4 == object follow
+char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board seek, 2 == LDR avoid, 3 == object sense, 4 == object follow, 5 == instruction mode
 
 int startTime = 0;
 int loopTime = 0;
@@ -73,6 +73,12 @@ void loop()
         //Follow object mode
         followMode(200);
     }
+    else if(opMode == '5')
+    {
+        //Instruction Mode
+        //This mode will be implemented in the TelPacket module
+        executeInstruction();
+    }
     else
     {
         opMode = 0; //If the opMode is currupted
@@ -88,7 +94,10 @@ void loop()
     if (telPacketTimer > telPacketRefresh)
     {
        if(opMode == '3') {basicPathFinder(500);}
-       Serial.println(Tel_Packet);
+       if(opMode != '5')
+       {
+           Serial.println(Tel_Packet);
+       }       
        telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;
