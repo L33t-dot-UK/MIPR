@@ -1,4 +1,4 @@
-# New Features in Verison 0.3
+# New Features in Version 0.3
 
 - The code is organised in different tabs to make it easier to read.
 - Odometry module added that gives battery voltage information and wheel speed info.
