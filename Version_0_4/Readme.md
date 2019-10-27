@@ -18,8 +18,7 @@ correct comm port for your system and the correct baud rate then press connect.
 
 # File Breakdown;
 
-SB001_A.txt - Settings file for Telemetry.jar
-- Telemetry.jar - Application to view telemetry from MIPR
+- SB001_A.txt - Settings file for Telemetry.jar
 - Version_0_4.ino - Main Arduino IDE file, contains setup and loop funcitons for MIPR
 - _01_Motor_Functions.ino - Contains functions to access MIPR's motor driver
 - _02_Communications.ino - Allows access to MIPR's bluetooth functions
@@ -27,5 +26,7 @@ SB001_A.txt - Settings file for Telemetry.jar
 - _04_Sensor_Board_001.ino - Provides functions for light seeking sensor board
 - _05_Sensor_Board_001A.ino - Provides functions for obstacle avoidance sensor board
 - _99_TelPacket.ino - Builds the telemetry packet for broadcast via the Bluetooth module and monitors battery voltage
+
+Please note Telemtry.jar is in the root of this project.
 
 Please note you must download the Polou Vl53L1X library from github for this code to work.

@@ -19,8 +19,6 @@ Op Modes are as follows;
 
 # File Breakdown;
 
-SB001_A.txt - Settings file for Telemetry.jar
-- Telemetry.jar - Application to view telemetry from MIPR
 - Version_0_4.ino - Main Arduino IDE file, contains setup and loop funcitons for MIPR
 - _01_Motor_Functions.ino - Contains functions to access MIPR's motor driver
 - _02_Communications.ino - Allows access to MIPR's bluetooth functions
