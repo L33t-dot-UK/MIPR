@@ -6,8 +6,6 @@
  * 
  * For use with SB-002 (Line Follower)
  * 
- * MUST BE USED WITH SENSOR BOARD SB-001A; I.E. OBSTACLE AVOIDANCE SENSOR BOARD. OF THIS IS NOT INSERTED COMMENT OUT LINE 34; Setup_Sensor();
- * FAILURE TO DO THIS WILL RESULT IN THE CODE HANGING WHEN A VL53L1X IS NOT DETECTED.
  */
 
 #include <EEPROM.h>
@@ -22,7 +20,7 @@ int loopTime = 0;
 int telPacketRefresh = 200;
 long telPacketTimer = 0;
 long telStartTimer = 0;
-
+    
 void setup() 
 {
     
@@ -33,8 +31,6 @@ void setup()
     {
         getEEPROM_Values();
     }
-
-    setup_Sensor();  //Comment this out if your not using the VL53XL1 sensor, if you don't the code will hang.
     
     opMode = int(EEPROM.read(5));  
     Serial.println("");
@@ -62,11 +58,11 @@ void loop()
     }
     else if(opMode == '1')
     {
-        Forwards(getMotorSpeed(true, true), getMotorSpeed(true, false));
+        //DO NOTHING
     }
     else if(opMode == '2')
     {
-        Forwards(getMotorSpeed(true, false), getMotorSpeed(true, true));
+        //DO NOTHING
     }
     else if(opMode == '3')
     {
@@ -75,14 +71,17 @@ void loop()
     }
     else if(opMode == '4')
     {
-        //Follow object mode
-        followMode(200);
+        //DO NOTHING
     }
     else if(opMode == '5')
     {
         //Instruction Mode
         //This mode will be implemented in the TelPacket module
         executeInstruction();
+    }
+    else if (opMode == '6')
+    {
+        //ADD STUFF HERE
     }
     else
     {
@@ -98,7 +97,6 @@ void loop()
     build_Tel_Packet();
     if (telPacketTimer > telPacketRefresh)
     {
-       if(opMode == '3') {basicPathFinder(500);}
        if(opMode != '5')
        {
            Serial.println(Tel_Packet);
@@ -113,6 +111,7 @@ void loop()
     {
         executeBTcommand(command);
     }
+    
     loopTime = millis() - startTime;
 }
 
