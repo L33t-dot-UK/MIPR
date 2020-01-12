@@ -1,9 +1,12 @@
-# DO NOT USE; STILL IN DEVELOPMENT
-
 # New Features in Version 0.5
 
 - Follow Mode added
 - Execute command mode added
+
+Follow mode will make the robot maintain a distance from an object the default value in the code is set to 200m, this can be changed.
+The execute command mode will let you type in a direction command and a time value. The robot will the travel the chosen distance for
+the given time. The time values are in milliseconds with a maximum value of 999mS. This is a little clunky but it demonstrates what can be
+done using commands. A future update of this mode will allow the user to specify distance rather than time.
 
 # Op Modes
 
