@@ -1,8 +1,11 @@
 /*
-// Author David Bradshaw
-// Basic funcitons for MIPR
-// visit https://www.l33t.uk/MIPR for more information
-*/
+ * MIPR Core Code Verison 0.1
+ * https://www.l33t.uk/arduino_projects/mipr/
+ * Copyright David Bradshaw 2019
+ * 
+ * For use with no sensor board; give MIPR basic functionality such as motor control and Bluetooth commands
+ * 
+ */
 
 int enRight = 9;
 int enLeft = 5;

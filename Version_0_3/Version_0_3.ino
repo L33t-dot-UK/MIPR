@@ -2,6 +2,11 @@
  * MIPR Core Code Verison 0.3
  * https://www.l33t.uk/arduino_projects/mipr/
  * Copyright David Bradshaw 2019
+ * 
+ * For use with SB-001 (light avoidance)
+ * 
+ * This code also adds basic odometry data over bluetooth if you don't have the odometry module attached set OdoMod_Installed = false on line 14
+ * 
  */
 
 #include <EEPROM.h>

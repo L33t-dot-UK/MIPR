@@ -1,8 +1,13 @@
 
 /*
- * MIPR Core Code Verison 0.4
+ * MIPR Core Code Verison 0.5
  * https://www.l33t.uk/arduino_projects/mipr/
  * Copyright David Bradshaw 2019
+ * 
+ * For use with SB-001, SB-001A or no sensor board; see below note (light avoidance and obstacle avoidance)
+ * 
+ * MUST BE USED WITH SENSOR BOARD SB-001A; I.E. OBSTACLE AVOIDANCE SENSOR BOARD. OF THIS IS NOT INSERTED COMMENT OUT LINE 34; Setup_Sensor();
+ * FAILURE TO DO THIS WILL RESULT IN THE CODE HANGING WHEN A VL53L1X IS NOT DETECTED.
  */
 
 #include <EEPROM.h>
@@ -14,7 +19,7 @@ char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board seek, 2 
 int startTime = 0;
 int loopTime = 0;
 
-int telPacketRefresh = 60;
+int telPacketRefresh = 200;
 long telPacketTimer = 0;
 long telStartTimer = 0;
 
@@ -29,7 +34,7 @@ void setup()
         getEEPROM_Values();
     }
 
-    setup_Sensor();
+    setup_Sensor();  //Comment this out if your not using the VL53XL1 sensor, if you don't the code will hang.
     
     opMode = int(EEPROM.read(5));  
     Serial.println("");

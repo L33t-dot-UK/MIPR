@@ -94,6 +94,13 @@ boolean executeInstruction()
             Halt();
             return true;
         }
+        else if (iString.equals("O"))
+        {
+           EEPROM.write(5, '0');
+           delay(50);
+           asm volatile ("  jmp 0"); //Resets the Arduino
+           return false;
+        }
         else
         {
             return false;
