@@ -1,8 +1,10 @@
+#FOR USE WITH SB-001
+
 # New Features in Version 0.3
 
 - The code is organised in different tabs to make it easier to read.
 - Odometry module added that gives battery voltage information and wheel speed info.
-- Sensor Board 001 code added goving MIPR the ability to detect light.
+- Sensor Board 001 code added giving MIPR the ability to detect light.
 - TelPacket code added to make it easier to create telemetry packets.
 - Motor funcitons and communicaiton functions have been put in there own tabs.
 

@@ -1,3 +1,5 @@
+#FOR USE WITH SB-001A
+
 # New Features in Version 0.4
 
 - Code added for sensor board 001A giving MIPR the ability to detect obstacles

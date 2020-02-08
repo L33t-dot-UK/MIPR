@@ -46,7 +46,7 @@ void setup()
     }
     else
     {
-        //Serial.println("No values found; cALIBRATION must be ran before using the Odometry Module");
+        Serial.println("No values found; CALIBRATION must be ran before using the Odometry Module");
     }  
 }
 

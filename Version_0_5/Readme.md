@@ -1,3 +1,5 @@
+#FOR USE WITH SB-001A
+
 # New Features in Version 0.5
 
 - Follow Mode added
