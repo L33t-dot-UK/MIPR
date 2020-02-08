@@ -156,11 +156,10 @@ void SampleWaveForm(boolean reset_Vars)
 }
 
 //Calculates the velocity in CM per Second
-float calc_Velocity()
+void calc_Velocity()
 {
     left_Velocity = (left_Wheel_RPS_Coarse * wheel_Cir);
     right_Velocity = (right_Wheel_RPS_Coarse * wheel_Cir);
-    
 }
 
 void getEEPROM_Values()
@@ -176,7 +175,7 @@ void getEEPROM_Values()
     }
     else
     {
-        Serial.println("No values found; cALIBRATION must be ran before using the Odometry Module");
+        Serial.println("No values found; Calibration must be ran before using the Odometry Module");
         while(1)
         {
             speaker_on();

@@ -1,5 +1,5 @@
 /*
- * Communicaitons Module Verison 0.4
+ * Communicaitons Module Verison 0.5 - For use with code 0.6 - SB-002 Line following board
  * https://www.l33t.uk/arduino_projects/mipr/
  * Copyright David Bradshaw 2019
  */
@@ -21,26 +21,31 @@
         softStop();
         Forwards(LEFTSPEED, RIGHTSPEED);
     }
-        if (command == 'B') //Backwards
+    if (command == 'B') //Backwards
     {
         softStop();
         Backwards(LEFTSPEED, RIGHTSPEED);
     }
-        if (command == 'L') //Left turn
+    if (command == 'L') //Left turn
     {
         softStop();
         Left(LEFTSPEED, RIGHTSPEED);
     }
-        if (command == 'R') //Right turn
+    if (command == 'R') //Right turn
     {
         softStop();
         Right(LEFTSPEED, RIGHTSPEED);
     }
-        if (command == 'S') //Stop
+    if (command == 'S') //Stop
     {
         softStop();
         delay(1);
         Halt();
+    }
+    if (command == 'C')
+    {
+        //Calibrate sensors for line follower
+        sensor_Cal();
     }
     if (command == 'O') //Stop
     {
@@ -58,7 +63,7 @@
         Serial.print(iString);
         Serial.println("Restarting MIPR in new mode");
         char mode = iString.charAt(0);
-        if (mode == '0' || mode == '1' || mode == '2' || mode == '3' || mode == '4' || mode == '5')
+        if (mode == '0' || mode == '1' || mode == '2' || mode == '3' || mode == '4' || mode == '5' ||  mode == '6')
         {
             //Do nothing
         }

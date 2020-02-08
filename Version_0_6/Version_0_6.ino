@@ -1,4 +1,4 @@
-
+      
 /*
  * MIPR Core Code Verison 0.6
  * https://www.l33t.uk/arduino_projects/mipr/
@@ -17,17 +17,16 @@ char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board seek, 2 
 int startTime = 0;
 int loopTime = 0;
 
-int telPacketRefresh = 200;
+int telPacketRefresh = 50;
 long telPacketTimer = 0;
 long telStartTimer = 0;
     
 void setup() 
 {
-    
     pinMode(2, OUTPUT);
-    Serial.begin(57600); //Change this 9600 if you do not the HC-05 for programming MIPR
+    Serial.begin(57600); //Change this to 9600 if you do not the HC-05 for programming MIPR
     
-    if (OdoMod_Installed == true)
+    if (OdoMod_Installed == false)
     {
         getEEPROM_Values();
     }
@@ -37,7 +36,7 @@ void setup()
     Serial.print("MIPR Started in mode ");
     Serial.println(opMode);
     delay(1000);
-
+/*
     //To let the user know that MIPR is ready
     speaker_on();
     delay(100);
@@ -46,32 +45,37 @@ void setup()
     speaker_on();
     delay(100);
     speaker_off();
-    
+*/
+    delay(150);  
+    sensor_Cal();
 }
 
 void loop() 
 {
+    //test_proc();
+    simple_LF();
+    
+    /*
     startTime = millis();
-    if (opMode == '0')
+    if (opMode == '0') //RC Mode
     {
         //Do Nothing
     }
     else if(opMode == '1')
     {
-        //DO NOTHING
+        //DO NOTHING; NOT IMPLEMENTED IN THIS CODE VERSION
     }
     else if(opMode == '2')
     {
-        //DO NOTHING
+        //DO NOTHING; NOT IMPLEMENTED IN THIS CODE VERSION
     }
     else if(opMode == '3')
     {
-        //The getDist call is below in the telPacketTimer if clause
-        //This is so we don't request an update from the sensor too quickly
+        //DO NOTHING; NOT IMPLEMENTED IN THIS CODE VERSION
     }
     else if(opMode == '4')
     {
-        //DO NOTHING
+        //DO NOTHING; NOT IMPLEMENTED IN THIS CODE VERSION
     }
     else if(opMode == '5')
     {
@@ -79,9 +83,10 @@ void loop()
         //This mode will be implemented in the TelPacket module
         executeInstruction();
     }
-    else if (opMode == '6')
+    else if (opMode == '6') //Line follower mode
     {
         //ADD STUFF HERE
+        simple_LF();
     }
     else
     {
@@ -95,9 +100,10 @@ void loop()
     }
 
     build_Tel_Packet();
+    
     if (telPacketTimer > telPacketRefresh)
     {
-       if(opMode != '5')
+       if(opMode != '5') //We dont want to print the telpacket if mode 5 is selected
        {
            Serial.println(Tel_Packet);
        }       
@@ -111,8 +117,9 @@ void loop()
     {
         executeBTcommand(command);
     }
-    
+
     loopTime = millis() - startTime;
+    */
 }
 
 
