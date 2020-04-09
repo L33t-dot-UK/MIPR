@@ -1,4 +1,7 @@
-#FOR USE WITH SB-001
+# FOR USE WITH SB-001
+
+REFERENCE: https://www.l33t.uk/arduino_projects/mipr/light-seeking-avoiding-sensor/
+REFERENCE: https://www.youtube.com/watch?v=w7ggVW4MEQE
 
 # New Features in Version 0.3
 
