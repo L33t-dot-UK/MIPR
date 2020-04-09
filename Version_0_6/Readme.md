@@ -1,5 +1,8 @@
 STILL IN DEVELOPMENT DO NOT USE
 
+REFERENCE: https://www.l33t.uk/arduino_projects/mipr/line-following-sensor-board/ \
+REFERENCE: https://www.youtube.com/watch?v=zg0Kx7rP8lE
+
 # New Features in Version 0.6
 
 - SB-002 sensor aquistion and calibration
