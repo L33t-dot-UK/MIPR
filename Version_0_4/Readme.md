@@ -1,4 +1,7 @@
-#FOR USE WITH SB-001A
+# FOR USE WITH SB-001A
+
+REFERENCE: https://www.l33t.uk/arduino_projects/mipr/obstacle-avoiding-sensor/ \
+REFERENCE: https://www.youtube.com/watch?v=MS5ZbgQp-YA
 
 # New Features in Version 0.4
 
