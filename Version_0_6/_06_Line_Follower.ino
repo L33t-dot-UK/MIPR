@@ -62,20 +62,46 @@ void sensor_Cal()
     Serial.println("Put all sensors over a white background and wait for a beep");
     delay(2000);
 
-    int bechmarkM = getRawSensorVal(M); //Benchmark value all other sensors will align themselves with this value
-    
+    int bechmarkM = 0; //Benchmark value all other sensors will align themselves with this value
+
+    int itterations = 250;
+    long averageVal = 0;
+
+    for (int ii = 0; ii < itterations; ii++)
+    {
+        delay(1);
+        averageVal = averageVal + (long)getRawSensorVal(M);
+    }
+    bechmarkM = averageVal / itterations;
+
+     long averageValL1 = 0; long averageValL2 = 0; long averageValR1 = 0; long averageValR2 = 0;
+     
     //Bias values that will be used to align the senor values
-    L1_bias = (float)bechmarkM / (float)getRawSensorVal(L1);
-    L2_bias = (float)bechmarkM / (float)getRawSensorVal(L2);
-    R1_bias = (float)bechmarkM / (float)getRawSensorVal(R1);
-    R2_bias = (float)bechmarkM / (float)getRawSensorVal(R2);
+    for (int ii = 0; ii < itterations; ii++)
+    {
+        delay(1);
+        averageValL1 = averageValL1 + (long)getRawSensorVal(L1);
+        averageValL2 = averageValL2 + (long)getRawSensorVal(L2);
+        averageValR1 = averageValR1 + (long)getRawSensorVal(R1);
+        averageValR2 = averageValR2 + (long)getRawSensorVal(R2);
+    }
+
+    averageValL1 = averageValL1 / itterations;
+    averageValL2 = averageValL2 / itterations; 
+    averageValR1 = averageValR1 / itterations;
+    averageValR2 = averageValR2 / itterations;
+    
+    L1_bias = (float)bechmarkM / (float)averageValL1;
+    L2_bias = (float)bechmarkM / (float)averageValL2;
+    R1_bias = (float)bechmarkM / (float)averageValR1;
+    R2_bias = (float)bechmarkM / (float)averageValR2;
 
     baseLineValue = (getCalSensorVal(L1) + getCalSensorVal(L2) + getCalSensorVal(R1) + getCalSensorVal(R2)) / 4; //This value is what all sensors will aim for
-    /*
+    
     speaker_on();
     delay(450);
     speaker_off();
-    */
+    
 }
 
 //Simple line follower using just 2 sensors L2 and R2. You need a fairly thick line for this to work properly.
@@ -99,14 +125,16 @@ void simple_LF()
     {
         Left(50,50);
     }
-    else if (leftVal < 500 && rightVal < 500)
+    
+    if (leftVal > 1000 && rightVal > 1000)
     {
         softStop();
+        
     } 
 }
 
 //Simple line follower using 3 sensors M, L2 and R2.
-//Works better than the above algorithm, mpre accurate and faster however still poor performing, we
+//Works better than the above algorithm, more accurate and faster however still poor performing, we
 //can do much better with an algorithm that adjusts its own speed depending on the values sensed by the sensor.
 void simple_LF_M()
 {
@@ -119,24 +147,24 @@ void simple_LF_M()
 
     if (midVal < leftVal && midVal < rightVal)
     {
-        //Centre sensor is over the line, go forward
-        Forwards(150,150);
+        //Centre sensor is over the line, go forward full speed
+        Forwards(200,200);
     }
     else if (leftVal < midVal && leftVal < rightVal)
     {
-        Left(40,40);
+        Left(50,50);
     }
     else if (rightVal < midVal && rightVal < leftVal)
     {
-       Right(40,40); 
+       Right(50,50); 
     }
     else if (rightVal < midVal)
     {
-        Right(40,40); 
+        Right(50,50); 
     }
     else if (leftVal < midVal)
     {
-        Left(40,40);
+        Left(50,50);
     }
     else
     {
@@ -165,6 +193,7 @@ void complex_LF()
      * BY A CERTAIN AMOUNT.
      */
 
+    
      
 }
 
@@ -182,14 +211,17 @@ void test_proc()
    Serial.print(getRawSensorVal(R2));
     Serial.print(",");
    Serial.println(getRawSensorVal(R1));
+
 /*
      delay(20);
-  Serial.print(L1_bias);
+  Serial.print(getCalSensorVal(L1));
  Serial.print(",");
- Serial.print(L2_bias);
+ Serial.print(getCalSensorVal(L2));
   Serial.print(",");
-  Serial.print(R1_bias);
+  Serial.print(getCalSensorVal(M));
    Serial.print(",");
-   Serial.println(R2_bias);
-*/
+   Serial.print(getCalSensorVal(R2));
+   Serial.print(",");
+   Serial.println(getCalSensorVal(R1));
+  */
 }

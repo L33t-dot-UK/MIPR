@@ -115,7 +115,7 @@ void loop()
     if (RESTART_MODE == 49)
     {
         //Pulse display mode used to test thresholds
-        Forwards(128,128);
+        Forwards(254,254);
         _01_Display_Pulse_Train();
     }
     

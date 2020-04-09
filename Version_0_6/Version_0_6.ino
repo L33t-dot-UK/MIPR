@@ -10,7 +10,7 @@
 
 #include <EEPROM.h>
 
-boolean OdoMod_Installed = true; //Change this to false if you do not have the odometry module installed
+boolean OdoMod_Installed = false; //Change this to false if you do not have the odometry module installed
 String Tel_Packet = "";
 char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board seek, 2 == LDR avoid, 3 == object sense, 4 == object follow, 5 == instruction mode
 
@@ -26,14 +26,15 @@ void setup()
     pinMode(2, OUTPUT);
     Serial.begin(57600); //Change this to 9600 if you do not the HC-05 for programming MIPR
     
-    if (OdoMod_Installed == false)
+    if (OdoMod_Installed == true)
     {
         getEEPROM_Values();
     }
     
     opMode = int(EEPROM.read(5));  
     Serial.println("");
-    Serial.print("MIPR Started in mode ");
+    //Serial.print("MIPR Started in mode ");
+    Serial.println("LEFT LEFT_I MIDDLE RIGHT_I RIGHT");
     Serial.println(opMode);
     delay(1000);
 /*
@@ -52,10 +53,6 @@ void setup()
 
 void loop() 
 {
-    //test_proc();
-    simple_LF();
-    
-    /*
     startTime = millis();
     if (opMode == '0') //RC Mode
     {
@@ -86,7 +83,7 @@ void loop()
     else if (opMode == '6') //Line follower mode
     {
         //ADD STUFF HERE
-        simple_LF();
+        simple_LF_M();
     }
     else
     {
@@ -119,7 +116,6 @@ void loop()
     }
 
     loopTime = millis() - startTime;
-    */
 }
 
 
