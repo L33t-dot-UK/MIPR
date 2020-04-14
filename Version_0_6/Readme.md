@@ -19,7 +19,9 @@ Op Modes are as follows;
 - 3; NOT IMPLEMENTED
 - 4; NOT IMPLEMENTED
 - 5; Execute command
-- 6; Line Follower Mode
+- 6; Line Follower Mode; Simple
+- 7; Line Follower Mode; Intermediate
+- 8; Line Follower Mode; Advanced
 
 Modes 1 to 4 do not work because they require SB-001 or SB-001A to work, for these modes use code version 0.5 or 0.4.
 

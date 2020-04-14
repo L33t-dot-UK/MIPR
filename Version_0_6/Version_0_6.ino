@@ -37,7 +37,7 @@ void setup()
     Serial.println("LEFT LEFT_I MIDDLE RIGHT_I RIGHT");
     Serial.println(opMode);
     delay(1000);
-/*
+
     //To let the user know that MIPR is ready
     speaker_on();
     delay(100);
@@ -46,13 +46,13 @@ void setup()
     speaker_on();
     delay(100);
     speaker_off();
-*/
+
     delay(150);  
-    sensor_Cal();
 }
 
 void loop() 
 {
+    
     startTime = millis();
     if (opMode == '0') //RC Mode
     {
@@ -80,14 +80,27 @@ void loop()
         //This mode will be implemented in the TelPacket module
         executeInstruction();
     }
-    else if (opMode == '6') //Line follower mode
+    else if(opMode == '6') //Line follower mode SIMPLE
     {
-        //ADD STUFF HERE
-        simple_LF_M();
+        LFHandler(1, false);
+    }
+    else if(opMode == '7') //Line follower mode INTERMEDIATE
+    {
+        LFHandler(2, false);
+    }
+    else if(opMode == '8') //Line follower mode ADVANCED
+    {
+        LFHandler(3, false);
+    }
+    else if(opMode == '9') //Line follower mode test mode
+    {
+        test_proc();
     }
     else
     {
         opMode = 0; //If the opMode is currupted
+        Serial.println("Error: Op Mode not found!");
+        delay(5000);
     }
 
     if (OdoMod_Installed == true)
@@ -96,18 +109,19 @@ void loop()
         calc_Velocity();
     }
 
+/*
     build_Tel_Packet();
     
     if (telPacketTimer > telPacketRefresh)
     {
-       if(opMode != '5') //We dont want to print the telpacket if mode 5 is selected
+       if(opMode != '5' || opMode != '6' || opMode != '7' || opMode != '8' || opMode != '9') //We dont want to print the telpacket if mode 5 is selected
        {
            Serial.println(Tel_Packet);
        }       
        telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;
-    
+    */
     //Listens for BT commands and allows us to change modes
     char command = listenForBTCommands();
     if (command != "")
@@ -116,6 +130,7 @@ void loop()
     }
 
     loopTime = millis() - startTime;
+    
 }
 
 

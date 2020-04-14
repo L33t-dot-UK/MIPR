@@ -63,15 +63,7 @@
         Serial.print(iString);
         Serial.println("Restarting MIPR in new mode");
         char mode = iString.charAt(0);
-        if (mode == '0' || mode == '1' || mode == '2' || mode == '3' || mode == '4' || mode == '5' ||  mode == '6')
-        {
-            //Do nothing
-        }
-        else
-        {
-            Serial.println("Invalid Mode, Robot will be put into mode 0");
-            mode = '0';
-        }
+
         EEPROM.write(5, mode);
         delay(50);
         asm volatile ("  jmp 0"); //Resets the Arduino

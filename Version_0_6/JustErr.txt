@@ -1,0 +1,85 @@
+Telemetry Viewer File Format v0.4
+
+Grid Settings:
+
+	column count = 8
+	row count = 8
+
+Serial Port Settings:
+
+	port = COM11
+	baud = 115200
+	packet type = ASCII CSVs
+	sample rate = 10000
+
+1 Data Structure Locations:
+
+	location = 0
+	processor index = -1
+	name = LR Error
+	color = 0xFF0000
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+3 Charts:
+
+	chart type = Time Domain Chart
+	top left x = 0
+	top left y = 0
+	bottom right x = 5
+	bottom right y = 7
+	datasets = 0
+	sample count = 30000
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Histogram Chart
+	top left x = 6
+	top left y = 0
+	bottom right x = 7
+	bottom right y = 4
+	datasets = 0
+	sample count = 100000
+	bin count = 60
+	x-axis is centered = false
+	x-axis center value = 0.0
+	x-axis autoscale minimum = true
+	x-axis manual minimum = -1.0
+	x-axis autoscale maximum = true
+	x-axis manual maximum = 1.0
+	y-axis shows relative frequency = true
+	y-axis shows frequency = false
+	y-axis minimum is zero = true
+	y-axis autoscale maximum = true
+	y-axis manual minimum = 0.0
+	y-axis manual maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Time Domain Chart (Cached)
+	top left x = 6
+	top left y = 5
+	bottom right x = 7
+	bottom right y = 7
+	datasets = 0
+	sample count = 10000
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
