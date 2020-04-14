@@ -12,8 +12,8 @@
  * values will be between 250 and 450, if your baseLine values are 800 for instance 
  * you will have to divide all sensor values by at least half for them to work with this code
  * 
- *      Resisor values should be; Low Power: R1 220 Ohms, R2 - R6 4700 Ohms
- *                                High Power: R1 20 Ohms, R2 - R6 470 Ohms (7805CV must be replaced with a BEC due to current draw)
+ *      Resistor values should be; Low Power: R1 220 Ohms, R2 - R6 4700 Ohms
+ *                                 High Power: R1 20 Ohms, R2 - R6 470 Ohms (7805CV must be replaced with a BEC due to current draw)
  */
  
 int L1 = A5; //Outer Left
