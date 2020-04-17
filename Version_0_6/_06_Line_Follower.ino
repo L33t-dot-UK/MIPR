@@ -135,8 +135,6 @@ void LFHandler(int mode, boolean fullTele)
      {
          sensor_Cal();
          firstRun = false;
-         //Serial.println("LEFTO LEFTI MIDDLE RIGHTI RIGHTO LEFTAVG RIGHTAVG ERROR");
-         Serial.println("lftAv rgtAv outterAv innerAv absAv midVal lrErr");
      }
 
     //get the sensor values
@@ -360,49 +358,4 @@ void sensor_Cal()
 void test_proc()
 { 
     
-  delay(20);
-  
-  Serial.print(getRawSensorVal(L1));
- Serial.print(",");
- Serial.print(getRawSensorVal(L2));
-  Serial.print(",");
-  Serial.print(getRawSensorVal(M));
-   Serial.print(",");
-   Serial.print(getRawSensorVal(R2));
-    Serial.print(",");
-   Serial.println(getRawSensorVal(R1));
-
-/*
-     delay(20);
-  Serial.print(getCalSensorVal(L1));
- Serial.print(",");
- Serial.print(getCalSensorVal(L2));
-  Serial.print(",");
-  Serial.print(getCalSensorVal(M));
-   Serial.print(",");
-   Serial.print(getCalSensorVal(R2));
-   Serial.print(",");
-   Serial.println(getCalSensorVal(R1));
-*/
-
-/*
-    Serial.print(lftAv);
-    Serial.print(",");
-    Serial.print(rgtAv);
-    Serial.print(",");
-    Serial.print(outtertAv);
-    Serial.print(",");
-    Serial.print(innerAv);
-    Serial.print(",");
-    Serial.print(absAv);
-    Serial.print(",");
-    Serial.print(midVal);
-    Serial.print(",");
-    
-    Serial.print(lrErr);
-    Serial.print(",");
-    Serial.print(lftSpeed);
-    Serial.print(",");
-    Serial.println(rgtSpeed);
-*/
 }
