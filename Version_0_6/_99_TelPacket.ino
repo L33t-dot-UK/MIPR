@@ -6,9 +6,36 @@
  */
 boolean isFirst = true;
 
-void build_Tel_Packet()
+void build_Tel_Packet(String sensorBoard)
 {
-    Tel_Packet = (String)lrErr + ", " + (String)loopTime;
+    if (sensorBoard == "NILT") //No sensor board with Odometry Module
+    {
+        Tel_Packet = (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime + "\n";
+    }
+    else if (sensorBoard == "SB001T") //SB001 with Odometry Module
+    {
+        Tel_Packet = (String)getLeftSensorVal()  + ',' +  (String)getRightSensorVal() + ',' +  (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime + "\n";
+    }
+    else if(sensorBoard == "SB001F")//SB001 without Odometry Module
+    {
+        Tel_Packet = (String)getLeftSensorVal()  + ',' +  (String)getRightSensorVal() + ',' + (String)loopTime + "\n";
+    }
+    else if(sensorBoard == "SB001AT")//SB001A with Odometry Module
+    {
+        Tel_Packet = String(global_Distance) + ',' + (String)getLeftSensorVal()  + ',' +  (String)getRightSensorVal() + ',' +  (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime + "\n";
+    }
+    else if(sensorBoard == "SB001AF")//SB001A without Odometry Module
+    {
+        Tel_Packet = String(global_Distance) + ',' + (String)getLeftSensorVal()  + ',' +  (String)getRightSensorVal() +  ',' + (String)loopTime + "\n";
+    }
+    else if(sensorBoard == "SB002T")//SB002 with Odometry Module
+    {
+        Tel_Packet = (String)lrErr + ", " + (String)loopTime;
+    }
+    else if(sensorBoard == "SB002F")//SB002 without Odometry Module
+    {
+        Tel_Packet = (String)lrErr + ", " + (String)loopTime;
+    }
 
     if(OdoMod_Installed == true && battVoltage < 3.58)
     {

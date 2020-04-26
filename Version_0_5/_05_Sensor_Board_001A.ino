@@ -25,6 +25,7 @@ void setup_Sensor()
     Wire.setClock(400000); // use 400 kHz I2C
 
     delay(10);
+    sensor.setTimeout(500);
  
     if (!sensor.init())
     {

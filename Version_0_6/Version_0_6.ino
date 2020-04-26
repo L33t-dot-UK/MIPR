@@ -33,12 +33,22 @@ void setup()
     
     opMode = int(EEPROM.read(5));  
     Serial.println("");
-    //Serial.print("MIPR Started in mode ");
+    Serial.print("MIPR Started in mode ");
     Serial.println(opMode);
     delay(100);
+    
+    if(opMode == '3' || opMode == '4')
+    {
+        Serial.println("Setting up SB001A");
+        setup_Sensor();
+    }
 
-    line_FollowerSetup();
-
+    if (opMode == '6' || opMode == '7' || opMode == '8')
+    {
+        Serial.println("Setting up SB002");
+        line_FollowerSetup();
+    }
+  
     //To let the user know that MIPR is ready
     speaker_on();
     delay(100);
@@ -47,51 +57,62 @@ void setup()
     speaker_on();
     delay(100);
     speaker_off();
-
     delay(150);  
 }
 
 void loop() 
 {
-    
     startTime = millis();
-    if (opMode == '0') //RC Mode
+    if (opMode == '0')
     {
         //Do Nothing
+        if (OdoMod_Installed == true){build_Tel_Packet("NILT");}
     }
     else if(opMode == '1')
     {
-        //DO NOTHING; NOT IMPLEMENTED IN THIS CODE VERSION
+        Forwards(getMotorSpeed(true, true), getMotorSpeed(true, false));
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001T");} else {build_Tel_Packet("SB001F");}
     }
     else if(opMode == '2')
     {
-        //DO NOTHING; NOT IMPLEMENTED IN THIS CODE VERSION
+        Forwards(getMotorSpeed(true, false), getMotorSpeed(true, true));
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001T");} else {build_Tel_Packet("SB001F");}
     }
     else if(opMode == '3')
     {
-        //DO NOTHING; NOT IMPLEMENTED IN THIS CODE VERSION
+        //The getDist call is below in the telPacketTimer if clause
+        //This is so we don't request an update from the sensor too quickly
+        //get_Sensor_Values(); //set these values in case we want to use them
+        //if (OdoMod_Installed == true){build_Tel_Packet("SB001AT");} else {build_Tel_Packet("SB001AF");}
     }
     else if(opMode == '4')
     {
-        //DO NOTHING; NOT IMPLEMENTED IN THIS CODE VERSION
+        //Follow object mode
+        followMode(200);
+        get_Sensor_Values(); //set these values in case we want to use them
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001AT");} else {build_Tel_Packet("SB001AF");}
     }
     else if(opMode == '5')
     {
         //Instruction Mode
         //This mode will be implemented in the TelPacket module
         executeInstruction();
+        get_Sensor_Values(); //set these values in case we want to use them
     }
     else if(opMode == '6') //Line follower mode SIMPLE
     {
         LFHandler(1, false);
+        if (OdoMod_Installed == true){build_Tel_Packet("SB002T");} else {build_Tel_Packet("SB002F");}
     }
     else if(opMode == '7') //Line follower mode INTERMEDIATE
     {
         LFHandler(2, false);
+        if (OdoMod_Installed == true){build_Tel_Packet("SB002T");} else {build_Tel_Packet("SB002F");}
     }
     else if(opMode == '8') //Line follower mode ADVANCED
     {
         LFHandler(3, false);
+        if (OdoMod_Installed == true){build_Tel_Packet("SB002T");} else {build_Tel_Packet("SB002F");}
     }
     else if(opMode == '9') //Line follower mode test mode
     {
@@ -108,22 +129,19 @@ void loop()
         calc_Velocity();
     }
 
-/*
-    build_Tel_Packet();
     if (telPacketTimer > telPacketRefresh)
     {
-       if(opMode != '5' || opMode != '6' || opMode != '7' || opMode != '8' || opMode != '9') //We dont want to print the telpacket if mode 5 is selected
-       {
-           Serial.println(Tel_Packet);
-       }       
-       telStartTimer = millis();
+        if(opMode == '3') {basicPathFinder(500);}
+        Serial.print(Tel_Packet);    
+        telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;
-*/
+
     //Listens for BT commands and allows us to change modes
     char command = listenForBTCommands();
-    if (command != "")
+    if (command != '.')
     {
+        Serial.println(command);
         executeBTcommand(command);
     }
 

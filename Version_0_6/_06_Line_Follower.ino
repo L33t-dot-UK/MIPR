@@ -72,9 +72,7 @@ void line_FollowerSetup()
     leftPID.SetOutputLimits(0, 200);
     leftPID.SetSampleTime(10);
     leftPID.SetMode(AUTOMATIC);
-    rightPID.SetMode(AUTOMATIC);
-    
-  
+    rightPID.SetMode(AUTOMATIC); 
 }
 
 //Simple line follower using just 2 sensors L2 and R2. You need a fairly thick line for this to work properly.

@@ -46,7 +46,6 @@ void setup()
     speaker_on();
     delay(100);
     speaker_off();
-    
 }
 
 void loop() 
@@ -56,14 +55,17 @@ void loop()
     if (opMode == '0')
     {
         //Do Nothing
+        if (OdoMod_Installed == true){build_Tel_Packet("NILT");}
     }
     else if(opMode == '1')
     {
         Forwards(getMotorSpeed(true, true), getMotorSpeed(true, false));
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001T");} else {build_Tel_Packet("SB001F");}
     }
     else if(opMode == '2')
     {
         Forwards(getMotorSpeed(false, false), getMotorSpeed(false, true));
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001T");} else {build_Tel_Packet("SB001F");}
     }
     else
     {
@@ -76,17 +78,16 @@ void loop()
         calc_Velocity();
     }
 
-    build_Tel_Packet();
     if (telPacketTimer > telPacketRefresh)
     {
-        Serial.println(Tel_Packet);
+        Serial.print(Tel_Packet);
         telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;
     
     //Listens for BT commands and allows us to change modes
     char command = listenForBTCommands();
-    if (command != "")
+    if (command != '.')
     {
         executeBTcommand(command);
     }

@@ -25,7 +25,6 @@ long telStartTimer = 0;
 
 void setup() 
 {
-    
     pinMode(2, OUTPUT);
     Serial.begin(57600); //Change this 9600 if you do not the HC-05 for programming MIPR
     
@@ -59,30 +58,38 @@ void loop()
     if (opMode == '0')
     {
         //Do Nothing
+        if (OdoMod_Installed == true){build_Tel_Packet("NILT");}
     }
     else if(opMode == '1')
     {
         Forwards(getMotorSpeed(true, true), getMotorSpeed(true, false));
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001T");} else {build_Tel_Packet("SB001F");}
     }
     else if(opMode == '2')
     {
         Forwards(getMotorSpeed(true, false), getMotorSpeed(true, true));
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001T");} else {build_Tel_Packet("SB001F");}
     }
     else if(opMode == '3')
     {
         //The getDist call is below in the telPacketTimer if clause
         //This is so we don't request an update from the sensor too quickly
+         get_Sensor_Values(); //set these values in case we want to use them
+         if (OdoMod_Installed == true){build_Tel_Packet("SB001AT");} else {build_Tel_Packet("SB001AF");}
     }
     else if(opMode == '4')
     {
         //Follow object mode
         followMode(200);
+        get_Sensor_Values(); //set these values in case we want to use them
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001AT");} else {build_Tel_Packet("SB001AF");}
     }
     else if(opMode == '5')
     {
         //Instruction Mode
         //This mode will be implemented in the TelPacket module
         executeInstruction();
+        get_Sensor_Values(); //set these values in case we want to use them
     }
     else
     {
@@ -95,21 +102,17 @@ void loop()
         calc_Velocity();
     }
 
-    build_Tel_Packet();
     if (telPacketTimer > telPacketRefresh)
     {
        if(opMode == '3') {basicPathFinder(500);}
-       if(opMode != '5')
-       {
-           Serial.println(Tel_Packet);
-       }       
+       Serial.print(Tel_Packet);       
        telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;
     
     //Listens for BT commands and allows us to change modes
     char command = listenForBTCommands();
-    if (command != "")
+    if (command != '.')
     {
         executeBTcommand(command);
     }

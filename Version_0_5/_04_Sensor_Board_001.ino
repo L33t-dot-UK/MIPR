@@ -93,5 +93,13 @@ int getMotorSpeed(boolean lightSeek, boolean isLeft)
     {
         //set to light avoid mode
     }
-    
+}
+int getLeftSensorVal()
+{
+    return leftLDRval;
+}
+
+int getRightSensorVal()
+{
+    return rightLDRval;
 }

@@ -59,23 +59,24 @@ void loop()
     if (opMode == '0')
     {
         //Do Nothing
-        get_Sensor_Values(); //set these values im case we want to use them
+        if (OdoMod_Installed == true){build_Tel_Packet("NILT");}
     }
     else if(opMode == '1')
     {
         Forwards(getMotorSpeed(true, true), getMotorSpeed(true, false));
-        //Odo data will be collected from the getMotorSpeed function
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001T");} else {build_Tel_Packet("SB001F");}
     }
     else if(opMode == '2')
     {
         Forwards(getMotorSpeed(true, false), getMotorSpeed(true, true));
-        //Odo data will be collected from the getMotorSpeed function
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001T");} else {build_Tel_Packet("SB001F");}
     }
     else if(opMode == '3')
     {
         //The getDist call is below in the telPacketTimer if clause
         //This is so we don't request an update from the sensor too quickly
-         get_Sensor_Values(); //set these values im case we want to use them
+         get_Sensor_Values(); //set these values in case we want to use them
+         if (OdoMod_Installed == true){build_Tel_Packet("SB001AT");} else {build_Tel_Packet("SB001AF");}
     }
     else
     {
@@ -88,22 +89,17 @@ void loop()
         calc_Velocity();
     }
 
-    build_Tel_Packet();
-    
     if (telPacketTimer > telPacketRefresh)
     {
-       if(opMode == '3') 
-       {
-           basicPathFinder(500); //Set threshold to 500mm/50cm
-       }
-       Serial.println(Tel_Packet);
+       if(opMode == '3') { basicPathFinder(500);} //Set threshold to 500mm/50cm
+       Serial.print(Tel_Packet);
        telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;
     
     //Listens for BT commands and allows us to change modes
     char command = listenForBTCommands();
-    if (command != "")
+    if (command != '.')
     {
         executeBTcommand(command);
     }

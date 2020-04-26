@@ -6,7 +6,7 @@
 
  char listenForBTCommands()
  {
-    char BTcommand = "";
+    char BTcommand = '.';
     if (Serial.available())
     {
         BTcommand = Serial.read();
@@ -21,6 +21,7 @@
         softStop();
         Forwards(getLeftSpeed(), getRightSpeed());
     }
+    
     if (command == 'B') //Backwards
     {
         softStop();
@@ -31,11 +32,13 @@
         softStop();
         Left(getLeftSpeed(), getRightSpeed());
     }
+    
     if (command == 'R') //Right turn
     {
         softStop();
         Right(getLeftSpeed(), getRightSpeed());
     }
+    
     if (command == 'S') //Stop
     {
         softStop();
@@ -47,7 +50,62 @@
         //Calibrate sensors for line follower
         sensor_Cal();
     }
-    if (command == 'O') //Stop
+    
+    if(command == '1')
+    {
+        setLeftSpeed(40);
+        setRightSpeed(40);
+    }
+    
+    if(command == '2')
+    {
+        setLeftSpeed(63);
+        setRightSpeed(63);
+    }
+    
+    if(command == '3')
+    {
+        setLeftSpeed(86);
+        setRightSpeed(86);
+    }
+    
+    if(command == '4')
+    {
+        setLeftSpeed(108);
+        setRightSpeed(108);
+    }
+    
+    if(command == '5')
+    {
+        setLeftSpeed(130);
+        setRightSpeed(130);
+    }
+    
+    if(command == '6')
+    {
+        setLeftSpeed(153);
+        setRightSpeed(153);
+    }  
+      
+    if(command == '7')
+    {
+        setLeftSpeed(176);
+        setRightSpeed(176);
+    }
+    
+    if(command == '8')
+    {
+        setLeftSpeed(200);
+        setRightSpeed(200);
+    }
+    
+    if(command == '9')
+    {
+        setLeftSpeed(255);
+        setRightSpeed(255);
+    }
+    
+    if (command == 'O') 
     {
         Halt();
         delay(10);
@@ -68,15 +126,16 @@
         delay(50);
         asm volatile ("  jmp 0"); //Resets the Arduino
     }
+    
  }
 
  void speaker_on()
  {
-    //digitalWrite(2, HIGH);
+    digitalWrite(2, HIGH);
  }
 
  void speaker_off()
  {
-    //digitalWrite(2, LOW);
+    digitalWrite(2, LOW);
  }
  

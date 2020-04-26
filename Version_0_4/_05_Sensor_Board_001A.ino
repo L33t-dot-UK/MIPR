@@ -25,17 +25,21 @@ void setup_Sensor()
     Wire.setClock(400000); // use 400 kHz I2C
 
     delay(10);
- 
+    
+    sensor.setTimeout(500);
+    
     if (!sensor.init())
     {
          Serial.println("VL53L1X Fails to startup");
     }
-    
-    sensor.setDistanceMode(VL53L1X::Long);
-    sensor.setMeasurementTimingBudget(50000); //Timing budget is 50mS
-    sensor.startContinuous(50); //Get a new value every 50mS
-    
+    else
+    {
+        sensor.setDistanceMode(VL53L1X::Long);
+        sensor.setMeasurementTimingBudget(50000); //Timing budget is 50mS
+        sensor.startContinuous(50); //Get a new value every 50mS
+    }
 }
+
 int getDist()
 {
    int reading = 0;
@@ -76,5 +80,4 @@ void basicPathFinder(int minDistance)
     {
         Forwards(96, 96);
     }
-    
 }
