@@ -7,7 +7,7 @@
 
 void build_Tel_Packet()
 {
-    Tel_Packet = (String)leftLDRval_A  + ',' +  (String)rightLDRval_A + ',' +  (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime;
+    Tel_Packet = (String)getLeftSensorVal()  + ',' +  (String)getRightSensorVal() + ',' +  (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime;
 
     if(OdoMod_Installed == true && battVoltage < 3.58)
     {

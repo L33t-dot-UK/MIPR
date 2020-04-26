@@ -19,22 +19,22 @@
     if (command == 'F') //Forwards
     {
         softStop();
-        Forwards(LEFTSPEED, RIGHTSPEED);
+        Forwards(getLeftSpeed(), getRightSpeed());
     }
     if (command == 'B') //Backwards
     {
         softStop();
-        Backwards(LEFTSPEED, RIGHTSPEED);
+        Backwards(getLeftSpeed(), getRightSpeed());
     }
     if (command == 'L') //Left turn
     {
         softStop();
-        Left(LEFTSPEED, RIGHTSPEED);
+        Left(getLeftSpeed(), getRightSpeed());
     }
     if (command == 'R') //Right turn
     {
         softStop();
-        Right(LEFTSPEED, RIGHTSPEED);
+        Right(getLeftSpeed(), getRightSpeed());
     }
     if (command == 'S') //Stop
     {
@@ -72,11 +72,11 @@
 
  void speaker_on()
  {
-    digitalWrite(2, HIGH);
+    //digitalWrite(2, HIGH);
  }
 
  void speaker_off()
  {
-    digitalWrite(2, LOW);
+    //digitalWrite(2, LOW);
  }
  

@@ -47,6 +47,9 @@ int meanRight = 500;
 long left_Refresh_Time = 0;
 long right_Refresh_Time = 0;
 
+boolean Left_Motor_Stopped = false;
+boolean Right_Motor_Stopped = false;
+
 //Sample the analog waveform and set valus to coarse and fine RPS from this the velocity can
 //be calculated.
 //We only sample the part of the waveform thats above the mean level, this saves time and
@@ -156,10 +159,11 @@ void SampleWaveForm(boolean reset_Vars)
 }
 
 //Calculates the velocity in CM per Second
-void calc_Velocity()
+float calc_Velocity()
 {
     left_Velocity = (left_Wheel_RPS_Coarse * wheel_Cir);
     right_Velocity = (right_Wheel_RPS_Coarse * wheel_Cir);
+    
 }
 
 void getEEPROM_Values()
@@ -175,7 +179,7 @@ void getEEPROM_Values()
     }
     else
     {
-        Serial.println("No values found; Calibration must be ran before using the Odometry Module");
+        Serial.println("No values found; cALIBRATION must be ran before using the Odometry Module");
         while(1)
         {
             speaker_on();

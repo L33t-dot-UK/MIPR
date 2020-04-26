@@ -1,5 +1,5 @@
 /*
- * Odometry Module Verison 0.3
+ * Odometry Module Verison 0.4
  * https://www.l33t.uk/arduino_projects/mipr/
  * Copyright David Bradshaw 2019
  */
@@ -47,7 +47,10 @@ int meanRight = 500;
 long left_Refresh_Time = 0;
 long right_Refresh_Time = 0;
 
-//Sample the analog waveform and set valus to coarse and fine RPS from this the velocity can
+boolean Left_Motor_Stopped = false;
+boolean Right_Motor_Stopped = false;
+
+//Sample the analog waveform and set values to coarse and fine RPS from this the velocity can
 //be calculated.
 //We only sample the part of the waveform thats above the mean level, this saves time and
 //makes the code simpler. Because of this we guess how long the negative part of the waveform

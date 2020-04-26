@@ -1,5 +1,5 @@
 /*
- * Communicaitons Module Verison 0.4
+ * Communicaitons Module Verison 0.3
  * https://www.l33t.uk/arduino_projects/mipr/
  * Copyright David Bradshaw 2019
  */
@@ -19,22 +19,22 @@
     if (command == 'F') //Forwards
     {
         softStop();
-        Forwards(LEFTSPEED, RIGHTSPEED);
+        Forwards(getLeftSpeed(),  getRightSpeed());
     }
         if (command == 'B') //Backwards
     {
         softStop();
-        Backwards(LEFTSPEED, RIGHTSPEED);
+        Backwards(getLeftSpeed(),  getRightSpeed());
     }
         if (command == 'L') //Left turn
     {
         softStop();
-        Left(LEFTSPEED, RIGHTSPEED);
+        Left(getLeftSpeed(),  getRightSpeed());
     }
         if (command == 'R') //Right turn
     {
         softStop();
-        Right(LEFTSPEED, RIGHTSPEED);
+        Right(getLeftSpeed(),  getRightSpeed());
     }
         if (command == 'S') //Stop
     {
@@ -58,15 +58,6 @@
         Serial.print(iString);
         Serial.println("Restarting MIPR in new mode");
         char mode = iString.charAt(0);
-        if (mode == '0' || mode == '1' || mode == '2' || mode == '3')
-        {
-            //Do nothing
-        }
-        else
-        {
-            Serial.println("Invalid Mode, Robot will be put into mode 0");
-            mode = '0';
-        }
         EEPROM.write(5, mode);
         delay(50);
         asm volatile ("  jmp 0"); //Resets the Arduino

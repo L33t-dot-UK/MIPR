@@ -15,6 +15,8 @@
  *      Resistor values should be; Low Power: R1 220 Ohms, R2 - R6 4700 Ohms
  *                                 High Power: R1 20 Ohms, R2 - R6 470 Ohms (7805CV must be replaced with a BEC due to current draw)
  */
+
+#include <PID_v1.h>
  
 int L1 = A5; //Outer Left
 int L2 = A4; //Inner Left
@@ -27,10 +29,33 @@ float L2_bias = 1;
 float R1_bias = 1;
 float R2_bias = 1;
 
+int leftOVal;
+int rightOVal;
+int leftMVal;
+int rightMVal;
+int midVal;
+    
 int baseLineValue = 0;
 
 boolean isCald = false;
 boolean firstRun = true;
+
+int lrErr = 0;
+
+//Define Variables we'll be connecting to
+double Setpoint, Input, Output;
+
+double baseSpeed = 40; //base speed
+
+//Define the aggressive and conservative Tuning Parameters
+double aggKp=4, aggKi=0.2, aggKd=1;
+double consKp=1, consKi=1, consKd=0.02;
+
+PID leftPID(&Input, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
+PID rightPID(&Input, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
+
+int refreshRate = 0;
+long refreshStartTime = millis();
 
 void line_FollowerSetup()
 {
@@ -41,6 +66,15 @@ void line_FollowerSetup()
     pinMode(A5, INPUT);
     pinMode(A6, INPUT);
     pinMode(A7, INPUT);
+
+    Setpoint = 0;
+    //turn the PID on
+    leftPID.SetOutputLimits(0, 200);
+    leftPID.SetSampleTime(10);
+    leftPID.SetMode(AUTOMATIC);
+    rightPID.SetMode(AUTOMATIC);
+    
+  
 }
 
 //Simple line follower using just 2 sensors L2 and R2. You need a fairly thick line for this to work properly.
@@ -67,23 +101,22 @@ void simple_LF(int leftVal, int rightVal)
 
 //A simple line follower using all sensors by averaging out the values for left and right sensors
 //The speed is adjusted depending on the difference between left and right values
-void simple_LF_M(int lftAv, int rgtAv)
+void simple_LF_M(int lftAv, int rgtAv, int lrErr)
 {  
-    int baseSpeed = 96; //base speed
+    baseSpeed = 96; //base speed
     int minSpeed = 0; //Minimum motor speed
-    int maxSpeed = 255; //Maximum motor speed
+    int maxSpeed = 255; //Maximum motor speed when using low power sensor board
+    //int maxSpeed = 150; //Maximum motor speed when using high power sensor board
     
     int lftSpeed;
     int rgtSpeed;
     
-    int lrErr = 0; //Erro between left and right side of the sensor board
-    
-    lrErr = lftAv - rgtAv;
-    
     //Our goal is to get lrErr to 0
     //if it is negative then the robot needs to turn left (left side over the line too much)
     //if it is possitive then the robot needs to turn right (right side over the line too much)
-          
+
+    //lrErr = lrErr * 0.8;      //Only use for high power sensor board
+    
     if(lrErr > 0) // turn right if the error is possitive
     {
         lftSpeed = baseSpeed - lrErr;
@@ -122,10 +155,146 @@ void simple_LF_M(int lftAv, int rgtAv)
 
 
 //Complex line follower using a PID and all 5 sensors 
-void complex_LF()
+void complex_LF_1(int leftOVal, int leftMVal, int midVal, int rightMVal, int rightOVal, int lrErr)
 {
+    //  P - Proportional an amount to multiply the error by 
+    //  I - Integral the sum of previous errors
+    //  D - Derivative the speed at which we react to errors
 
+        /*
+        P:instanteneousError = setpoint – input;
+        I:cumulativeError = += error * elapsedTime;
+        D:rateOfError = (error – errorLastCalculation)/elapsedTime;
+         */
+
+    /*
+     * For this PID the setpoint will always be 0 i.e. no error between the left and right side
+     */
+    Input = lrErr; 
+    double gap = Setpoint-Input; 
+
+    int lftSpeed;
+    int rgtSpeed;
+    int errThreshold = 10;
+    int upperThreshold = 80;
+    
+    if (abs(lrErr) > errThreshold) //if we have a small lrErr
+    {
+         leftPID.Compute(); //Only add to the PID if the error is greater than the threshold
+    }
+
+    if (abs(lrErr) > upperThreshold)
+    {
+        if (baseSpeed > 40)
+        {
+            baseSpeed = baseSpeed - 0.1;
+        }
+    }
+    if (abs(lrErr) < errThreshold) //if we have a small lrErr
+    {
+        if (baseSpeed < 200)
+        {
+            baseSpeed = baseSpeed + 0.01;
+        }
+        lftSpeed = baseSpeed + Output;
+        rgtSpeed = baseSpeed + Output;
+    }
+    else if(lrErr > 0) // turn right if the error is possitive
+    {
+        lftSpeed = baseSpeed - Output;
+        rgtSpeed = baseSpeed + Output;
+    }
+    else // turn left if the error is negative or 0
+    {
+        lftSpeed = baseSpeed + Output;
+        rgtSpeed = baseSpeed - Output;
+    }
+
+    int minSpeed = 0; //Minimum motor speed
+    int maxSpeed = 255; //Maximum motor speed when using low power sensor board
+    
+    if (lftSpeed < minSpeed){lftSpeed = minSpeed;}
+    if (rgtSpeed < minSpeed){rgtSpeed = minSpeed;}
+    if (lftSpeed > maxSpeed){lftSpeed = maxSpeed;}
+    if (rgtSpeed > maxSpeed){rgtSpeed = maxSpeed;}
+    
+    Forwards(abs(lftSpeed), abs(rgtSpeed));
+    
+    Serial.print(gap);
+    Serial.print(',');
+    Serial.print(lrErr);
+    Serial.print(',');
+    Serial.print(Output);
+    Serial.print(',');
+    Serial.print(lftSpeed);
+    Serial.print(',');
+    Serial.println(rgtSpeed);
+}
+
+//Complex line follower using a PID and all 5 sensors 
+void complex_LF(int leftOVal, int leftMVal, int midVal, int rightMVal, int rightOVal, int lrErr)
+{
+    //  P - Proportional an amount to multiply the error by 
+    //  I - Integral the sum of previous errors
+    //  D - Derivative the speed at which we react to errors
+
+        /*
+        P:instanteneousError = setpoint – input;
+        I:cumulativeError = += error * elapsedTime;
+        D:rateOfError = (error – errorLastCalculation)/elapsedTime;
+         */
+
+    /*
+     * For this PID the setpoint will always be 0 i.e. no error between the left and right side
+     */
+
+     //left vs center error
+     int lcErr = ((leftOVal + leftMVal) / 2) - midVal; //A possitive value indicates that the robot needs to move to the right
+                                                        //A negative value means that the centre sensor is closer to the line
+                                                        
+     int rcErr = ((rightOVal + rightMVal) / 2) - midVal; //A positive value indicates that the robot needs to move right
+                                                            //A negative value means that the centre sensor is closer to the line
+     
+
+    
    
+    Input = lrErr;
+    //double gap = abs(Setpoint-Input); 
+    double gap = Setpoint-Input; 
+    leftPID.Compute();
+
+    int lftSpeed;
+    int rgtSpeed;
+    
+    if(lrErr > 0) // turn right if the error is possitive
+    {
+        lftSpeed = 0 - Output;
+        rgtSpeed = 0 + Output;
+    }
+    else // turn left if the error is negative or 0
+    {
+        lftSpeed = 0 + Output;
+        rgtSpeed = 0 - Output;
+    }
+
+    int minSpeed = 0; //Minimum motor speed
+    int maxSpeed = 255; //Maximum motor speed when using low power sensor board
+    
+    if (lftSpeed < minSpeed){lftSpeed = minSpeed;}
+    if (rgtSpeed < minSpeed){rgtSpeed = minSpeed;}
+    if (lftSpeed > maxSpeed){lftSpeed = maxSpeed;}
+    if (rgtSpeed > maxSpeed){rgtSpeed = maxSpeed;}
+    
+    Forwards(abs(lftSpeed), abs(rgtSpeed));
+    Serial.print(gap);
+    Serial.print(',');
+    Serial.print(lrErr);
+    Serial.print(',');
+    Serial.print(Output);
+    Serial.print(',');
+    Serial.print(lftSpeed);
+    Serial.print(',');
+    Serial.println(rgtSpeed);
 }
 
 void LFHandler(int mode, boolean fullTele)
@@ -138,11 +307,18 @@ void LFHandler(int mode, boolean fullTele)
      }
 
     //get the sensor values
-    int leftOVal = getCalSensorVal(L1);
-    int rightOVal = getCalSensorVal(R1);
-    int leftMVal = getCalSensorVal(L2);
-    int rightMVal = getCalSensorVal(R2);
-    int midVal =  getCalSensorVal(M);
+    int RefreshTimer = millis() - refreshStartTime;
+    if (RefreshTimer > refreshRate)
+    {
+        leftOVal = getCalSensorVal(L1);
+        rightOVal = getCalSensorVal(R1);
+        leftMVal = getCalSensorVal(L2);
+        rightMVal = getCalSensorVal(R2);
+        midVal =  getCalSensorVal(M);
+        RefreshTimer = 0;
+        refreshStartTime = millis();
+    }
+
 
     //average the value for the outer sensors
     int lftAv = (leftOVal + leftMVal) / 2;
@@ -151,6 +327,8 @@ void LFHandler(int mode, boolean fullTele)
     int outtertAv = (leftOVal + rightOVal) / 2;
     int innerAv =   (leftMVal + rightMVal) / 2;
 
+    lrErr = lftAv - rgtAv; //Error for the intter left and inner right sensors
+    
     int absAv = (leftOVal + rightOVal + leftMVal + rightMVal + midVal) / 5;
 
     float lftSpeed = 0;
@@ -218,7 +396,6 @@ void LFHandler(int mode, boolean fullTele)
     //------------------------------------------- END OF LINE DETECTION STUFF ---------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    
     if (detectLine == false) //No line detected reverse the robot and sound the speaker
     {
         //softStop();
@@ -235,12 +412,13 @@ void LFHandler(int mode, boolean fullTele)
         else if (mode == 2) //Intemediate LF
         {
             speaker_off();
-            simple_LF_M(lftAv, rgtAv);
+            simple_LF_M(lftAv, rgtAv, lrErr);
         }
         else if (mode == 3) //PID
         {
             speaker_off();
-            //Not implemented yet
+             complex_LF_1(leftOVal, leftMVal, midVal, rightMVal, rightOVal, lrErr);
+
         }
     }
 }
@@ -271,12 +449,13 @@ int getRawSensorVal(int sensor)
 int getCalSensorVal(int sensor)
 {
     float sensorVal;
+
     if(sensor == M){sensorVal = (float)analogRead(sensor);}
     else if(sensor == L1){sensorVal = L1_bias * (float)analogRead(sensor);}
     else if(sensor == L2){sensorVal = L2_bias * (float)analogRead(sensor);}
     else if(sensor == R1){sensorVal = R1_bias * (float)analogRead(sensor);}
     else if(sensor == R2){sensorVal = R2_bias * (float)analogRead(sensor);}
-    
+
     return (int)sensorVal;
 }
 
@@ -290,7 +469,7 @@ void sensor_Cal()
     speaker_off();
     
     Serial.println("Put all sensors over a white background and wait for a beep");
-    delay(2000);
+    delay(500);
 
     int bechmarkM = 0; //Benchmark value all other sensors will align themselves with this value
 
@@ -352,10 +531,20 @@ void sensor_Cal()
 
     isCald = true;
     // Delay to allow user to put robot over the line
-    delay(2000);
+    delay(500);
 }
 
 void test_proc()
 { 
+    delay(20);
+    Serial.print(getRawSensorVal(L1));
+    Serial.print(",");
+    Serial.print(getRawSensorVal(L2));
+    Serial.print(",");
+    Serial.print(getRawSensorVal(M));
+    Serial.print(",");
+    Serial.print(getRawSensorVal(R2));
+    Serial.print(",");
+    Serial.println(getRawSensorVal(R1));
     
 }

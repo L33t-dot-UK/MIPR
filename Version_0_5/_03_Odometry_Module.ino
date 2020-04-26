@@ -47,6 +47,9 @@ int meanRight = 500;
 long left_Refresh_Time = 0;
 long right_Refresh_Time = 0;
 
+boolean Left_Motor_Stopped = false;
+boolean Right_Motor_Stopped = false;
+
 //Sample the analog waveform and set valus to coarse and fine RPS from this the velocity can
 //be calculated.
 //We only sample the part of the waveform thats above the mean level, this saves time and

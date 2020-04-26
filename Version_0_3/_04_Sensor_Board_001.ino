@@ -1,97 +1,82 @@
 /*
  * Sensor Board 001 = Light Following/Avoiding Sensor Board
+ * Version 1.0
  * https://www.l33t.uk/arduino_projects/mipr/light-seeking-avoiding-sensor/
  * Copyright David Bradshaw 2019
  * 
  */
 
- int leftLDR = A1;
- int rightLDR = A2;
+int leftLDR = A1;
+int rightLDR = A2;
 
- int leftLDRval = 0;
- int rightLDRval = 0;
+int leftLDRval = 0;
+int rightLDRval = 0;
 
- int leftLDRval_A = 0;
- int rightLDRval_A = 0;
-    
- void get_Sensor_Values()
- {
-    leftLDRval = analogRead(rightLDR);
-    rightLDRval = analogRead(leftLDR);
- }
+void get_Sensor_Values()
+{
+   leftLDRval = analogRead(rightLDR);
+   rightLDRval = analogRead(leftLDR);
+}
 
+//lightSeek will put the robot in light seek or avoid mode
+//isLeft will return the value from the left sensor or the right sensor, true==left, false==right
 int getMotorSpeed(boolean lightSeek, boolean isLeft)
 {
     get_Sensor_Values();
 
-    leftLDRval_A = leftLDRval;
-    rightLDRval_A = rightLDRval;
-
-    //If both LDR values are within 100 of each other then make MIPR go forward at
+    //If both LDR values are within 100 of each other then make MIPR go forwards or backwards at
     //full speed, this will make the robots movements less twitchy
-    if (leftLDRval - rightLDRval < 100 && leftLDRval - rightLDRval > 0)
+    if (abs(leftLDRval - rightLDRval) < 100)
     {
-       if (leftLDRval > 600)
+       if (leftLDRval > 600 || rightLDRval > 600)
         {
-             if (lightSeek == true)
-            {
-                rightLDRval = 253;   
-                leftLDRval = 253;
-            }
-            else
-            {
-                rightLDRval = -253;   
-                leftLDRval = -253;
-            }
-        }
-    }
-    else if (rightLDRval - leftLDRval < 100 && rightLDRval - leftLDRval > 0)
-    {
-        if (rightLDRval > 600)
-        {
+            //Go forwards at full speed (almost)!
             if (lightSeek == true)
             {
-                rightLDRval = 253;   
-                leftLDRval = 253;
+                rightLDRval = 1023;   
+                leftLDRval = 1023;
             }
             else
             {
-                rightLDRval = -253;   
-                leftLDRval = -253;
+                //Go backwards at full speed!
+                rightLDRval = -1023;   
+                leftLDRval = -1023;
             }
         }
     }
-
-     
-    if(leftLDRval > rightLDRval)
+    //If the light is coming from the left stop the right motor
+    else if (leftLDRval > rightLDRval)
     {
         rightLDRval = 0;
     }
-    if (rightLDRval > leftLDRval)
+    //If the light is coming from the right stop the left motor
+    else if (rightLDRval > leftLDRval)
     {
-        leftLDRval = 0;
+        leftLDRval = 0;  
     }
 
+    //divide by 4 so the value is between 0 - 255
     rightLDRval = rightLDRval / 4;
     leftLDRval = leftLDRval / 4;
-    
-    if(lightSeek == true)
+
+    if(isLeft == true)
     {
-        //set to light seek mode
-        if(isLeft == true)
-        {
-            //return left sensor value
-            return (leftLDRval);
-        }
-        else if (isLeft == false)
-        {
-            //return right sensor value
-            return (rightLDRval);
-        }
+        //return left sensor value
+        return (leftLDRval);
     }
-    else if (lightSeek == false)
+    else if (isLeft == false)
     {
-        //set to light avoid mode
-    }
-    
+        //return right sensor value
+        return (rightLDRval);
+    }    
+}
+
+int getLeftSensorVal()
+{
+    return leftLDRval;
+}
+
+int getRightSensorVal()
+{
+    return rightLDRval;
 }

@@ -8,8 +8,7 @@ boolean isFirst = true;
 
 void build_Tel_Packet()
 {
-    
-   // Tel_Packet = (String)leftVal  + ',' +  (String)rightVal + ',' +  (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime; //TEL_PAK_001
+    Tel_Packet = (String)lrErr + ", " + (String)loopTime;
 
     if(OdoMod_Installed == true && battVoltage < 3.58)
     {

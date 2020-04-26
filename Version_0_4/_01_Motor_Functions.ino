@@ -1,8 +1,10 @@
 /*
- * Motor Functions Module Verison 0.4
+ * Motor Functions Module Version 1.0
  * https://www.l33t.uk/arduino_projects/mipr/
- * Copyright David Bradshaw 2019
+ * Copyright David Bradshaw 2020
  */
+
+//Pin allocations for the motor driver
 int enRight = 5;
 int enLeft = 9;
 int i1A = 4; 
@@ -10,26 +12,27 @@ int i2A = 3;
 int i3A = 8;
 int i4A = 7;
 
-boolean Left_Motor_Stopped = false;
-boolean Right_Motor_Stopped = false;
+//Default speed of the motors
+int dLeftSpeed = 124;
+int dRightSpeed = 124;
 
-int LEFTSPEED = 124;
-int RIGHTSPEED = 124;
-/*
- * MOTOR FUNCTIONS
- */
+//Allows us to get the motors status
+char leftMotorStatus = 'S';
+char rightMotorStatus = 'S';
 
- void Forwards(int leftSpeed, int rightSpeed)
- {
-
+void Forwards(int leftSpeed, int rightSpeed)
+{
+    //Allows us to use negative speeds to make the robot go backwards
     if (leftSpeed < 0 || rightSpeed< 0)
     {
         digitalWrite(i1A,HIGH);
         digitalWrite(i2A,LOW);
         digitalWrite(i3A,LOW);
         digitalWrite(i4A,HIGH);
-        analogWrite(enLeft, 253);
-        analogWrite(enRight, 253);
+        analogWrite(enLeft, abs(leftSpeed));
+        analogWrite(enRight, abs(rightSpeed));
+        leftMotorStatus = 'B';
+        rightMotorStatus = 'B';
     }
     else
     {
@@ -39,48 +42,86 @@ int RIGHTSPEED = 124;
         digitalWrite(i4A,LOW);
         analogWrite(enLeft, leftSpeed);
         analogWrite(enRight, rightSpeed);
+        leftMotorStatus = 'F';
+        rightMotorStatus = 'F';
     }
 
-   
- }
-  void Backwards(int leftSpeed, int rightSpeed)
- {
+}
+void Backwards(int leftSpeed, int rightSpeed)
+{
     digitalWrite(i1A,HIGH);
     digitalWrite(i2A,LOW);
     digitalWrite(i3A,LOW);
     digitalWrite(i4A,HIGH);
     analogWrite(enLeft, leftSpeed);
     analogWrite(enRight, rightSpeed);
- }
- void Right(int leftRotationSpeed, int rightRotationSpeed)
- {
-    digitalWrite(i1A,LOW);
-    digitalWrite(i2A,HIGH);
-    digitalWrite(i3A,LOW);
-    digitalWrite(i4A,HIGH);
-    analogWrite(enLeft, leftRotationSpeed);
-    analogWrite(enRight, rightRotationSpeed);
- } 
- void Left(int leftRotationSpeed, int rightRotationSpeed)
- {
+    leftMotorStatus = 'B';
+    rightMotorStatus = 'B';
+}
+void Left(int leftRotationSpeed, int rightRotationSpeed)
+{
     digitalWrite(i1A,HIGH);
     digitalWrite(i2A,LOW);
     digitalWrite(i3A,HIGH);
     digitalWrite(i4A,LOW);
     analogWrite(enLeft, leftRotationSpeed);
     analogWrite(enRight, rightRotationSpeed);
- }
- void Halt()
- {
+    leftMotorStatus = 'B';
+    rightMotorStatus = 'F';
+}
+void Right(int leftRotationSpeed, int rightRotationSpeed)
+{
+    digitalWrite(i1A,LOW);
+    digitalWrite(i2A,HIGH);
+    digitalWrite(i3A,LOW);
+    digitalWrite(i4A,HIGH);
+    analogWrite(enLeft, leftRotationSpeed);
+    analogWrite(enRight, rightRotationSpeed);
+    leftMotorStatus = 'F';
+    rightMotorStatus = 'B';
+} 
+void Halt()
+{
     digitalWrite(i1A,LOW);
     digitalWrite(i2A,LOW);
     digitalWrite(i3A,LOW);
     digitalWrite(i4A,LOW);
     analogWrite(enLeft, 0);
     analogWrite(enRight, 0);
- }
-  void softStop()
- {
+    leftMotorStatus = 'S';
+    rightMotorStatus = 'S';
+}
+
+void softStop()
+{
     analogWrite(enLeft, 0);
     analogWrite(enRight, 0);
- }
+    leftMotorStatus = 'S';
+    rightMotorStatus = 'S';
+}
+
+//Helper funcitons to get information about the motors or to set certain parameters
+void setLeftSpeed(int leftSpeed)
+{
+    dLeftSpeed = leftSpeed;
+}
+void setRightSpeed(int rightSpeed)
+{
+    dRightSpeed = rightSpeed;
+}
+int getLeftSpeed()
+{
+    return dLeftSpeed;
+}
+int getRightSpeed()
+{
+    return dRightSpeed;
+}
+char getLeftMotorStatus()
+{
+    return leftMotorStatus;
+}
+char getRightMotorStatus()
+{
+    return rightMotorStatus;
+}

@@ -34,9 +34,10 @@ void setup()
     opMode = int(EEPROM.read(5));  
     Serial.println("");
     //Serial.print("MIPR Started in mode ");
-    Serial.println("LEFT LEFT_I MIDDLE RIGHT_I RIGHT");
     Serial.println(opMode);
-    delay(1000);
+    delay(100);
+
+    line_FollowerSetup();
 
     //To let the user know that MIPR is ready
     speaker_on();
@@ -99,8 +100,6 @@ void loop()
     else
     {
         opMode = 0; //If the opMode is currupted
-        Serial.println("Error: Op Mode not found!");
-        delay(5000);
     }
 
     if (OdoMod_Installed == true)
@@ -111,7 +110,6 @@ void loop()
 
 /*
     build_Tel_Packet();
-    
     if (telPacketTimer > telPacketRefresh)
     {
        if(opMode != '5' || opMode != '6' || opMode != '7' || opMode != '8' || opMode != '9') //We dont want to print the telpacket if mode 5 is selected
@@ -121,7 +119,7 @@ void loop()
        telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;
-    */
+*/
     //Listens for BT commands and allows us to change modes
     char command = listenForBTCommands();
     if (command != "")

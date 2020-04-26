@@ -63,7 +63,7 @@ void loop()
     }
     else if(opMode == '2')
     {
-        Forwards(getMotorSpeed(true, false), getMotorSpeed(true, true));
+        Forwards(getMotorSpeed(false, false), getMotorSpeed(false, true));
     }
     else
     {
