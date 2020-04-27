@@ -1,4 +1,4 @@
-STILL IN DEVELOPMENT DO NOT USE
+# FOR USE WITH SB-001, SB-001A OR SB-002 
 
 REFERENCE: https://www.l33t.uk/arduino_projects/mipr/line-following-sensor-board/ \
 REFERENCE: https://www.youtube.com/watch?v=zg0Kx7rP8lE
@@ -23,7 +23,7 @@ Op Modes are as follows;
 - 7; Line Follower Mode; Intermediate
 - 8; Line Follower Mode; Advanced
 
-Modes 1 to 4 do not work because they require SB-001 or SB-001A to work, for these modes use code version 0.5 or 0.4.
+Modes 1 to 4 work with this code version once SB-001 or SB-001A have been inserted.
 
 # File Breakdown;
 
