@@ -31,6 +31,8 @@ Modes 1 to 4 work with this code version once SB-001 or SB-001A have been insert
 - _01_Motor_Functions.ino - Contains functions to access MIPR's motor driver
 - _02_Communications.ino - Allows access to MIPR's bluetooth functions
 - _03_Odometry_Module.ino - Carries out basic odometry calculaitons
+- _04_Sensor_Board_001.ino - Provides functions for light seeking sensor board
+- _05_Sensor_Board_001A.ino - Provides functions for obstacle avoidance sensor board
 - _06_Line_Follower.ino
 - _99_TelPacket.ino - Builds the telemetry packet for broadcast via the Bluetooth module and monitors battery voltage
 
