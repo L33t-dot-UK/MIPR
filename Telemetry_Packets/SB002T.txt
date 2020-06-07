@@ -1,0 +1,229 @@
+Telemetry Viewer File Format v0.4
+
+Grid Settings:
+
+	column count = 8
+	row count = 8
+
+Serial Port Settings:
+
+	port = COM11
+	baud = 57600
+	packet type = ASCII CSVs
+	sample rate = 10000
+
+12 Data Structure Locations:
+
+	location = 0
+	processor index = -1
+	name = left_O
+	color = 0xFF0000
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 1
+	processor index = -1
+	name = left_I
+	color = 0x000099
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 2
+	processor index = -1
+	name = mid
+	color = 0x00FF00
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 3
+	processor index = -1
+	name = right_I
+	color = 0x00CCCC
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 4
+	processor index = -1
+	name = right_O
+	color = 0x330033
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 5
+	processor index = -1
+	name = PID_input
+	color = 0x003333
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 6
+	processor index = -1
+	name = PID_output
+	color = 0x3333FF
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 7
+	processor index = -1
+	name = lrErr
+	color = 0x006666
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 8
+	processor index = -1
+	name = left_Velocity
+	color = 0x666600
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 9
+	processor index = -1
+	name = right_Velocity
+	color = 0x333333
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 10
+	processor index = -1
+	name = batt_V
+	color = 0x990099
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 11
+	processor index = -1
+	name = loop_Time
+	color = 0x000000
+	unit = 
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+7 Charts:
+
+	chart type = Time Domain Chart
+	top left x = 0
+	top left y = 0
+	bottom right x = 7
+	bottom right y = 3
+	datasets = 0,1,2,3,4
+	sample count = 1000
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Time Domain Chart
+	top left x = 0
+	top left y = 4
+	bottom right x = 2
+	bottom right y = 7
+	datasets = 5,6,7
+	sample count = 1000
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Dial Chart
+	top left x = 7
+	top left y = 4
+	bottom right x = 7
+	bottom right y = 5
+	datasets = 9
+	sample count = 1000
+	autoscale minimum = true
+	manual minimum = -1.0
+	autoscale maximum = true
+	manual maximum = 1.0
+	show reading label = true
+	show dataset label = true
+	show min max labels = true
+	show statistics = true
+
+	chart type = Dial Chart
+	top left x = 6
+	top left y = 4
+	bottom right x = 6
+	bottom right y = 5
+	datasets = 8
+	sample count = 1000
+	autoscale minimum = true
+	manual minimum = -1.0
+	autoscale maximum = true
+	manual maximum = 1.0
+	show reading label = true
+	show dataset label = true
+	show min max labels = true
+	show statistics = true
+
+	chart type = Dial Chart
+	top left x = 6
+	top left y = 6
+	bottom right x = 7
+	bottom right y = 7
+	datasets = 10
+	sample count = 1000
+	autoscale minimum = false
+	manual minimum = 3.5
+	autoscale maximum = false
+	manual maximum = 4.2
+	show reading label = true
+	show dataset label = true
+	show min max labels = true
+	show statistics = true
+
+	chart type = Time Domain Chart
+	top left x = 3
+	top left y = 6
+	bottom right x = 5
+	bottom right y = 7
+	datasets = 11
+	sample count = 1000
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Time Domain Chart
+	top left x = 3
+	top left y = 4
+	bottom right x = 5
+	bottom right y = 5
+	datasets = 7
+	sample count = 1000
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true

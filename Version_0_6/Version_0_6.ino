@@ -24,7 +24,7 @@ long telStartTimer = 0;
 void setup() 
 {
     pinMode(2, OUTPUT);
-    Serial.begin(57600); //Change this to 9600 if you do not the HC-05 for programming MIPR
+    Serial.begin(57600); //Change this to 9600 if you do not use the HC-05 for programming MIPR
     
     if (OdoMod_Installed == true)
     {
@@ -63,6 +63,7 @@ void setup()
 void loop() 
 {
     startTime = millis();
+
     if (opMode == '0')
     {
         //Do Nothing
@@ -114,9 +115,9 @@ void loop()
         LFHandler(3, false);
         if (OdoMod_Installed == true){build_Tel_Packet("SB002T");} else {build_Tel_Packet("SB002F");}
     }
-    else if(opMode == '9') //Line follower mode test mode
+    else if(opMode == '9')
     {
-        test_proc();
+        
     }
     else
     {
@@ -136,17 +137,15 @@ void loop()
         telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;
-
+    
     //Listens for BT commands and allows us to change modes
     char command = listenForBTCommands();
     if (command != '.')
     {
-        Serial.println(command);
         executeBTcommand(command);
     }
 
     loopTime = millis() - startTime;
-    
 }
 
 

@@ -35,6 +35,7 @@ void setup_Sensor()
         sensor.setDistanceMode(VL53L1X::Long);
         sensor.setMeasurementTimingBudget(50000); //Timing budget is 50mS
         sensor.startContinuous(50); //Get a new value every 50mS
+        Serial.println("SB001A Setup");
     }
 }
 int getDist()

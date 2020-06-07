@@ -23,15 +23,28 @@ char rightMotorStatus = 'S';
 void Forwards(int leftSpeed, int rightSpeed)
 {
     //Allows us to use negative speeds to make the robot go backwards
-    if (leftSpeed < 0 || rightSpeed< 0)
+    if (leftSpeed < 0)
     {
         digitalWrite(i1A,HIGH);
         digitalWrite(i2A,LOW);
+        
+        digitalWrite(i3A,HIGH);
+        digitalWrite(i4A,LOW);
+        analogWrite(enLeft, abs(leftSpeed));
+        analogWrite(enRight, abs(rightSpeed));
+        leftMotorStatus = 'B';
+        rightMotorStatus = 'F';
+    }
+    else if (rightSpeed < 0)
+    {
+        digitalWrite(i1A,LOW);
+        digitalWrite(i2A,HIGH);
+        
         digitalWrite(i3A,LOW);
         digitalWrite(i4A,HIGH);
         analogWrite(enLeft, abs(leftSpeed));
         analogWrite(enRight, abs(rightSpeed));
-        leftMotorStatus = 'B';
+        leftMotorStatus = 'F';
         rightMotorStatus = 'B';
     }
     else

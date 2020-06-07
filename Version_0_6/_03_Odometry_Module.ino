@@ -6,7 +6,7 @@
 
 int battVpin = A3; //Battery voltage pin
 float battV = 0;
-float battVoltage = 0;
+float battVoltage = 4.2;
 
 int leftMotorSensor = A7;
 int rightMotorSensor = A6;

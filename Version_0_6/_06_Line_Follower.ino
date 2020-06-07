@@ -1,5 +1,5 @@
 /*
- * Line Follower Module Verison 0.1
+ * Line Follower Module Verison 0.1 SB-002
  * https://www.l33t.uk/arduino_projects/mipr/
  * Copyright David Bradshaw 2019
  * 
@@ -45,14 +45,14 @@ int lrErr = 0;
 //Define Variables we'll be connecting to
 double Setpoint, Input, Output;
 
-double baseSpeed = 40; //base speed
+double baseSpeed = 55; //base speed
+int minLimit = -200;
+int maxLimit = 200;
 
-//Define the aggressive and conservative Tuning Parameters
-double aggKp=4, aggKi=0.2, aggKd=1;
-double consKp=1, consKi=1, consKd=0.02;
+//Ki should always be above Kp
+double consKp=3, consKi=5, consKd=0.1;
 
 PID leftPID(&Input, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
-PID rightPID(&Input, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
 
 int refreshRate = 0;
 long refreshStartTime = millis();
@@ -69,10 +69,9 @@ void line_FollowerSetup()
 
     Setpoint = 0;
     //turn the PID on
-    leftPID.SetOutputLimits(0, 200);
+    leftPID.SetOutputLimits(minLimit, maxLimit);
     leftPID.SetSampleTime(10);
     leftPID.SetMode(AUTOMATIC);
-    rightPID.SetMode(AUTOMATIC); 
 }
 
 //Simple line follower using just 2 sensors L2 and R2. You need a fairly thick line for this to work properly.
@@ -153,146 +152,66 @@ void simple_LF_M(int lftAv, int rgtAv, int lrErr)
 
 
 //Complex line follower using a PID and all 5 sensors 
-void complex_LF_1(int leftOVal, int leftMVal, int midVal, int rightMVal, int rightOVal, int lrErr)
-{
-    //  P - Proportional an amount to multiply the error by 
-    //  I - Integral the sum of previous errors
-    //  D - Derivative the speed at which we react to errors
-
-        /*
-        P:instanteneousError = setpoint – input;
-        I:cumulativeError = += error * elapsedTime;
-        D:rateOfError = (error – errorLastCalculation)/elapsedTime;
-         */
-
-    /*
-     * For this PID the setpoint will always be 0 i.e. no error between the left and right side
-     */
-    Input = lrErr; 
-    double gap = Setpoint-Input; 
-
-    int lftSpeed;
-    int rgtSpeed;
-    int errThreshold = 10;
-    int upperThreshold = 80;
-    
-    if (abs(lrErr) > errThreshold) //if we have a small lrErr
-    {
-         leftPID.Compute(); //Only add to the PID if the error is greater than the threshold
-    }
-
-    if (abs(lrErr) > upperThreshold)
-    {
-        if (baseSpeed > 40)
-        {
-            baseSpeed = baseSpeed - 0.1;
-        }
-    }
-    if (abs(lrErr) < errThreshold) //if we have a small lrErr
-    {
-        if (baseSpeed < 200)
-        {
-            baseSpeed = baseSpeed + 0.01;
-        }
-        lftSpeed = baseSpeed + Output;
-        rgtSpeed = baseSpeed + Output;
-    }
-    else if(lrErr > 0) // turn right if the error is possitive
-    {
-        lftSpeed = baseSpeed - Output;
-        rgtSpeed = baseSpeed + Output;
-    }
-    else // turn left if the error is negative or 0
-    {
-        lftSpeed = baseSpeed + Output;
-        rgtSpeed = baseSpeed - Output;
-    }
-
-    int minSpeed = 0; //Minimum motor speed
-    int maxSpeed = 255; //Maximum motor speed when using low power sensor board
-    
-    if (lftSpeed < minSpeed){lftSpeed = minSpeed;}
-    if (rgtSpeed < minSpeed){rgtSpeed = minSpeed;}
-    if (lftSpeed > maxSpeed){lftSpeed = maxSpeed;}
-    if (rgtSpeed > maxSpeed){rgtSpeed = maxSpeed;}
-    
-    Forwards(abs(lftSpeed), abs(rgtSpeed));
-    
-    Serial.print(gap);
-    Serial.print(',');
-    Serial.print(lrErr);
-    Serial.print(',');
-    Serial.print(Output);
-    Serial.print(',');
-    Serial.print(lftSpeed);
-    Serial.print(',');
-    Serial.println(rgtSpeed);
-}
-
-//Complex line follower using a PID and all 5 sensors 
 void complex_LF(int leftOVal, int leftMVal, int midVal, int rightMVal, int rightOVal, int lrErr)
 {
     //  P - Proportional an amount to multiply the error by 
     //  I - Integral the sum of previous errors
     //  D - Derivative the speed at which we react to errors
 
-        /*
-        P:instanteneousError = setpoint – input;
-        I:cumulativeError = += error * elapsedTime;
-        D:rateOfError = (error – errorLastCalculation)/elapsedTime;
-         */
-
     /*
      * For this PID the setpoint will always be 0 i.e. no error between the left and right side
      */
 
-     //left vs center error
-     int lcErr = ((leftOVal + leftMVal) / 2) - midVal; //A possitive value indicates that the robot needs to move to the right
-                                                        //A negative value means that the centre sensor is closer to the line
-                                                        
-     int rcErr = ((rightOVal + rightMVal) / 2) - midVal; //A positive value indicates that the robot needs to move right
-                                                            //A negative value means that the centre sensor is closer to the line
-     
-
+    float scaleFactor = 1 / float(maxLimit);
+    float ETV; //Error Tracker Value ratio
     
-   
-    Input = lrErr;
-    //double gap = abs(Setpoint-Input); 
-    double gap = Setpoint-Input; 
-    leftPID.Compute();
+    int leftAv = leftOVal + leftMVal / 2;
+    int rightAv = rightMVal + rightOVal / 2;
+    int lrAv = leftAv-rightAv;
+
+    Input = lrAv; 
 
     int lftSpeed;
     int rgtSpeed;
+    int errThreshold = 60;
+    int upperThreshold = 120;
+
+    leftPID.Compute(); 
     
-    if(lrErr > 0) // turn right if the error is possitive
+    if (abs(Output) > upperThreshold)
     {
-        lftSpeed = 0 - Output;
-        rgtSpeed = 0 + Output;
+        if (baseSpeed > 55)
+        {
+            baseSpeed = baseSpeed - 20;
+        }
+    }
+    if (abs(Output) < errThreshold)
+    {
+        if (baseSpeed < 200)
+        {
+            baseSpeed = baseSpeed + 10;
+        }
+    }
+    
+    ETV = 1 - (scaleFactor * float(abs(Output)));
+
+    if (Output < 0) // turn right if the error is possitive
+    {
+        lftSpeed = (baseSpeed*ETV) + (ETV * abs(Output));
+        rgtSpeed = baseSpeed + abs(Output);
     }
     else // turn left if the error is negative or 0
     {
-        lftSpeed = 0 + Output;
-        rgtSpeed = 0 - Output;
+        lftSpeed = baseSpeed + abs(Output);
+        rgtSpeed = (baseSpeed*ETV) + (ETV * abs(Output));
     }
 
-    int minSpeed = 0; //Minimum motor speed
     int maxSpeed = 255; //Maximum motor speed when using low power sensor board
-    
-    if (lftSpeed < minSpeed){lftSpeed = minSpeed;}
-    if (rgtSpeed < minSpeed){rgtSpeed = minSpeed;}
+
     if (lftSpeed > maxSpeed){lftSpeed = maxSpeed;}
     if (rgtSpeed > maxSpeed){rgtSpeed = maxSpeed;}
-    
+   
     Forwards(abs(lftSpeed), abs(rgtSpeed));
-    Serial.print(gap);
-    Serial.print(',');
-    Serial.print(lrErr);
-    Serial.print(',');
-    Serial.print(Output);
-    Serial.print(',');
-    Serial.print(lftSpeed);
-    Serial.print(',');
-    Serial.println(rgtSpeed);
 }
 
 void LFHandler(int mode, boolean fullTele)
@@ -396,7 +315,7 @@ void LFHandler(int mode, boolean fullTele)
 
     if (detectLine == false) //No line detected reverse the robot and sound the speaker
     {
-        //softStop();
+        softStop();
         Backwards(42,42);
         speaker_on();
     }
@@ -415,7 +334,7 @@ void LFHandler(int mode, boolean fullTele)
         else if (mode == 3) //PID
         {
             speaker_off();
-             complex_LF_1(leftOVal, leftMVal, midVal, rightMVal, rightOVal, lrErr);
+             complex_LF(leftOVal, leftMVal, midVal, rightMVal, rightOVal, lrErr);
 
         }
     }
@@ -530,19 +449,4 @@ void sensor_Cal()
     isCald = true;
     // Delay to allow user to put robot over the line
     delay(500);
-}
-
-void test_proc()
-{ 
-    delay(20);
-    Serial.print(getRawSensorVal(L1));
-    Serial.print(",");
-    Serial.print(getRawSensorVal(L2));
-    Serial.print(",");
-    Serial.print(getRawSensorVal(M));
-    Serial.print(",");
-    Serial.print(getRawSensorVal(R2));
-    Serial.print(",");
-    Serial.println(getRawSensorVal(R1));
-    
 }

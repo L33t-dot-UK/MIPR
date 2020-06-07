@@ -30,17 +30,20 @@ void build_Tel_Packet(String sensorBoard)
     }
     else if(sensorBoard == "SB002T")//SB002 with Odometry Module
     {
-        Tel_Packet = (String)lrErr + ", " + (String)loopTime;
+        Tel_Packet = (String)leftOVal + ',' + (String)leftMVal + ',' + (String)midVal + ',' + (String)rightMVal + ',' + (String)rightOVal + ',' + (String)Input + ',' + (String)Output + ',' + (String)lrErr + ',' + (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime + "\n";
     }
     else if(sensorBoard == "SB002F")//SB002 without Odometry Module
     {
-        Tel_Packet = (String)lrErr + ", " + (String)loopTime;
+        Tel_Packet = (String)lrErr + "," + (String)loopTime;
     }
+
+
 
     if(OdoMod_Installed == true && battVoltage < 3.58)
     {
         if (isFirst == true)
         {
+            Serial.print("Battery Voltage too Low, resting for 10 seconds");
             //stop the motors and rest for 10 seconds allowing the load to be taken off the battery
             digitalWrite(13, HIGH); //Turn on the Arduino's LED indicating that the robot is resting for 10 seconds
             Halt();
