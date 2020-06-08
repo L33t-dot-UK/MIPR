@@ -80,7 +80,7 @@ void loop()
 
     if (telPacketTimer > telPacketRefresh)
     {
-        Serial.print(Tel_Packet);
+        Serial.println(Tel_Packet);
         telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;

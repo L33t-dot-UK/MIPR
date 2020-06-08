@@ -103,7 +103,7 @@ void loop()
     if (telPacketTimer > telPacketRefresh)
     {
        if(opMode == '3') {basicPathFinder(500);}
-       Serial.print(Tel_Packet);       
+       Serial.println(Tel_Packet);       
        telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;
