@@ -10,7 +10,7 @@
 
 #include <EEPROM.h>
 
-boolean OdoMod_Installed = false; //Change this to false if you do not have the odometry module installed
+boolean OdoMod_Installed = true; //Change this to false if you do not have the odometry module installed
 String Tel_Packet = "";
 char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board seek, 2 == LDR avoid, 3 == object sense, 4 == object follow, 5 == instruction mode
 
@@ -133,7 +133,7 @@ void loop()
     if (telPacketTimer > telPacketRefresh)
     {
         if(opMode == '3') {basicPathFinder(500);}
-        Serial.print(Tel_Packet);    
+        Serial.println(Tel_Packet);    
         telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;

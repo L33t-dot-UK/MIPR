@@ -126,7 +126,6 @@
         delay(50);
         asm volatile ("  jmp 0"); //Resets the Arduino
     }
-    
  }
 
  void speaker_on()
