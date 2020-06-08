@@ -50,7 +50,7 @@ int minLimit = -200;
 int maxLimit = 200;
 
 //Ki should always be above Kp
-double consKp=3, consKi=5, consKd=0.1;
+double consKp=1.25, consKi=1.25, consKd=0.02;
 
 PID leftPID(&Input, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
 
@@ -177,7 +177,8 @@ void complex_LF(int leftOVal, int leftMVal, int midVal, int rightMVal, int right
     int upperThreshold = 120;
 
     leftPID.Compute(); 
-    
+
+/*
     if (abs(Output) > upperThreshold)
     {
         if (baseSpeed > 55)
@@ -192,6 +193,7 @@ void complex_LF(int leftOVal, int leftMVal, int midVal, int rightMVal, int right
             baseSpeed = baseSpeed + 10;
         }
     }
+*/
     
     ETV = 1 - (scaleFactor * float(abs(Output)));
 
@@ -206,7 +208,7 @@ void complex_LF(int leftOVal, int leftMVal, int midVal, int rightMVal, int right
         rgtSpeed = (baseSpeed*ETV) + (ETV * abs(Output));
     }
 
-    int maxSpeed = 255; //Maximum motor speed when using low power sensor board
+    int maxSpeed = 255; //Maximum motor speed
 
     if (lftSpeed > maxSpeed){lftSpeed = maxSpeed;}
     if (rgtSpeed > maxSpeed){rgtSpeed = maxSpeed;}

@@ -17,7 +17,7 @@ char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board seek, 2 
 int startTime = 0;
 int loopTime = 0;
 
-int telPacketRefresh = 50;
+int telPacketRefresh = 20;
 long telPacketTimer = 0;
 long telStartTimer = 0;
     
