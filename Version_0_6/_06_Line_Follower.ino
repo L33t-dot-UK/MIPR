@@ -49,13 +49,18 @@ double baseSpeed = 55; //base speed
 int minLimit = -200;
 int maxLimit = 200;
 
-//Ki should always be above Kp
+//values for Output trigger
 double consKp=1.25, consKi=1.25, consKd=0.02;
 
 PID leftPID(&Input, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
 
 int refreshRate = 0;
 long refreshStartTime = millis();
+
+int prevDirection = 0; //0 == left, 1 == right
+int directionCounter = 0;
+#define direcitonCntr_MAX 20
+int prevDirectionArray[direcitonCntr_MAX];
 
 void line_FollowerSetup()
 {
@@ -70,7 +75,7 @@ void line_FollowerSetup()
     Setpoint = 0;
     //turn the PID on
     leftPID.SetOutputLimits(minLimit, maxLimit);
-    leftPID.SetSampleTime(10);
+    leftPID.SetSampleTime(5);
     leftPID.SetMode(AUTOMATIC);
 }
 
@@ -96,7 +101,7 @@ void simple_LF(int leftVal, int rightVal)
     }
 }
 
-//A simple line follower using all sensors by averaging out the values for left and right sensors
+//A simple line follower using L2 and R2 sensors
 //The speed is adjusted depending on the difference between left and right values
 void simple_LF_M(int lftAv, int rgtAv, int lrErr)
 {  
@@ -151,7 +156,7 @@ void simple_LF_M(int lftAv, int rgtAv, int lrErr)
 }
 
 
-//Complex line follower using a PID and all 5 sensors 
+//Complex line follower using a PID algorithm, error tracking, line prediction and all left and right sensors 
 void complex_LF(int leftOVal, int leftMVal, int midVal, int rightMVal, int rightOVal, int lrErr)
 {
     //  P - Proportional an amount to multiply the error by 
@@ -163,7 +168,7 @@ void complex_LF(int leftOVal, int leftMVal, int midVal, int rightMVal, int right
      */
 
     float scaleFactor = 1 / float(maxLimit);
-    float ETV; //Error Tracker Value ratio
+    float ETV; //Error Tracking Value ratio
     
     int leftAv = leftOVal + leftMVal / 2;
     int rightAv = rightMVal + rightOVal / 2;
@@ -173,12 +178,11 @@ void complex_LF(int leftOVal, int leftMVal, int midVal, int rightMVal, int right
 
     int lftSpeed;
     int rgtSpeed;
-    int errThreshold = 60;
-    int upperThreshold = 120;
+    int errThreshold = 30;
+    int upperThreshold = 50;
 
     leftPID.Compute(); 
 
-/*
     if (abs(Output) > upperThreshold)
     {
         if (baseSpeed > 55)
@@ -193,27 +197,51 @@ void complex_LF(int leftOVal, int leftMVal, int midVal, int rightMVal, int right
             baseSpeed = baseSpeed + 10;
         }
     }
-*/
-    
+
     ETV = 1 - (scaleFactor * float(abs(Output)));
 
-    if (Output < 0) // turn right if the error is possitive
+    //We're using the PID output to calculate the direction and motor speed
+    //This can cause issues when direction change happens quickly due to the
+    //lag built into the PID values. To combat this we will use a vector predict array
+    //Please note that Output will be opposite to Input for instance if Input is
+    //possitive Output will be negative
+    if (Output < 0) // turn left if the error is negative
     {
-        lftSpeed = (baseSpeed*ETV) + (ETV * abs(Output));
-        rgtSpeed = baseSpeed + abs(Output);
+        lftSpeed = (baseSpeed*ETV) + (ETV * abs(Output)); //Slower wheel
+        rgtSpeed = baseSpeed + abs(Output); //Faster wheel
+        prevDirectionArray[directionCounter] = 0;
     }
-    else // turn left if the error is negative or 0
+    else if (Output > 0) // turn right if the error is possitive
+    {
+        lftSpeed = baseSpeed + abs(Output); //Faster wheel
+        rgtSpeed = (baseSpeed*ETV) + (ETV * abs(Output)); //Slower wheel
+        prevDirectionArray[directionCounter] = 1;
+    }
+    else
     {
         lftSpeed = baseSpeed + abs(Output);
-        rgtSpeed = (baseSpeed*ETV) + (ETV * abs(Output));
+        rgtSpeed = baseSpeed + abs(Output);
     }
-
+   
     int maxSpeed = 255; //Maximum motor speed
 
     if (lftSpeed > maxSpeed){lftSpeed = maxSpeed;}
     if (rgtSpeed > maxSpeed){rgtSpeed = maxSpeed;}
    
     Forwards(abs(lftSpeed), abs(rgtSpeed));
+
+    prevDirection = 0;
+    for (int i=0; i< direcitonCntr_MAX; i++)
+    {
+        prevDirection += prevDirectionArray[i];
+    }
+
+    directionCounter = directionCounter + 1;
+    if (directionCounter == direcitonCntr_MAX)
+    {
+        directionCounter = 0;
+    }
+    
 }
 
 void LFHandler(int mode, boolean fullTele)
@@ -317,8 +345,28 @@ void LFHandler(int mode, boolean fullTele)
 
     if (detectLine == false) //No line detected reverse the robot and sound the speaker
     {
-        softStop();
-        Backwards(42,42);
+       if (opMode == '8')
+       {
+            baseSpeed  = 45;
+            if (prevDirection > (direcitonCntr_MAX /2 ))
+            {
+                Left(50,50);
+            }
+            else if (prevDirection < (direcitonCntr_MAX /2 ))
+            {
+                Right(50,50);
+            }
+            else if (prevDirection == (direcitonCntr_MAX /2 ))
+            {
+                softStop();
+                Backwards(42,42);
+            }
+        }
+        else
+        {
+            softStop();
+            Backwards(42,42);
+        }
         speaker_on();
     }
     else //We have a line so execute the correct algorithm
