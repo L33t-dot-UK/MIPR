@@ -6,7 +6,7 @@ REFERENCE: https://www.youtube.com/watch?v=zg0Kx7rP8lE
 # New Features in Version 0.6
 
 - SB-002 sensor aquistion and calibration
-- Line following Mode
+- Line following Mode simple, intermediate and advanced
 
 # Op Modes
 
