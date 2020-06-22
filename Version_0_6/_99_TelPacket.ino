@@ -8,6 +8,7 @@ boolean isFirst = true;
 
 void build_Tel_Packet(String sensorBoard)
 {
+    Tel_Packet = ".";
     if (sensorBoard == "NILT") //No sensor board with Odometry Module
     {
         Tel_Packet = (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime;
@@ -36,8 +37,6 @@ void build_Tel_Packet(String sensorBoard)
     {
         Tel_Packet = (String)lrErr + "," + (String)loopTime;
     }
-
-
 
     if(OdoMod_Installed == true && battVoltage < 3.58)
     {

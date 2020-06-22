@@ -11,7 +11,7 @@
 #include <EEPROM.h>
 
 boolean OdoMod_Installed = false; //Change this to false if you do not have the odometry module installed
-String Tel_Packet = "";
+String Tel_Packet = ".";
 char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board seek, 2 == LDR avoid, 3 == object sense, 4 == object follow, 5 == instruction mode
 
 int startTime = 0;
@@ -32,7 +32,6 @@ void setup()
     }
     
     opMode = int(EEPROM.read(5));  
-    Serial.println("");
     Serial.print("MIPR Started in mode ");
     Serial.println(opMode);
     delay(100);
@@ -133,14 +132,18 @@ void loop()
     if (telPacketTimer > telPacketRefresh)
     {
         if(opMode == '3') {basicPathFinder(500);}
-        Serial.println(Tel_Packet);    
+        if(Tel_Packet.equals(".")){} //Dont print if tel packet is the default value
+        else if (Tel_Packet.equals("")){} //Dont print if tel packet is empty
+        else{Serial.println(Tel_Packet);}
         telStartTimer = millis();
     }
     telPacketTimer = millis() - telStartTimer;
     
     //Listens for BT commands and allows us to change modes
-    char command = listenForBTCommands();
-    if (command != '.')
+    String command = listenForBTCommands();
+    if (command.equals("."))
+    {
+    }else
     {
         executeBTcommand(command);
     }

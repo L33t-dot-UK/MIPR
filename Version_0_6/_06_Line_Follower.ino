@@ -482,7 +482,7 @@ void sensor_Cal()
         speaker_on();
         delay(5000);
         speaker_off();
-        executeBTcommand('O');
+        executeBTcommand("O");
     }
 
     // 2 beeps to indicate that cal has finished

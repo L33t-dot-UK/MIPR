@@ -1,111 +1,132 @@
 /*
- * Communicaitons Module Verison 0.5 - For use with code 0.6 - SB-002 Line following board
+ * Communicaitons Module Verison 0.6 - For use with code 0.6 - SB-002 Line following board
  * https://www.l33t.uk/arduino_projects/mipr/
  * Copyright David Bradshaw 2019
+ * 
+ * Now supports multi character commands and detects newline and carriage return
+ * characters at the end of commands
  */
 
- char listenForBTCommands()
+ String listenForBTCommands()
  {
-    char BTcommand = '.';
+    String BTcommand = ".";
+    Serial.setTimeout(5);
+    Serial.flush();
+    
     if (Serial.available())
     {
-        BTcommand = Serial.read();
+        BTcommand = Serial.readString();
+    }
+
+    //STRIP OFF NEWLINE AND CARRIAGE RETURN CHARACTERS IF THEY ARE PRESENT
+    if(BTcommand.substring(BTcommand.length() - 2, BTcommand.length()).equals("\r\n")) //Detect NL and CR, we need to remove this
+    {
+        BTcommand = BTcommand.substring(0,BTcommand.length() - 2);
+    }
+    else if(BTcommand.substring(BTcommand.length() - 1, BTcommand.length()).equals("\n")) //Detect a NL, we need to remove this
+    {
+        BTcommand = BTcommand.substring(0,BTcommand.length() - 1);
+    }
+    else if(BTcommand.substring(BTcommand.length() - 1, BTcommand.length()).equals("\r")) //Detect a CR, we need to remove this
+    {
+        BTcommand = BTcommand.substring(0,BTcommand.length() - 1);
     }
     return BTcommand;
  }
 
- void executeBTcommand(char command)
+ void executeBTcommand(String command)
  {
-    if (command == 'F') //Forwards
+    
+    if (command.equals("F")) //Forwards
     {
         softStop();
         Forwards(getLeftSpeed(), getRightSpeed());
     }
     
-    if (command == 'B') //Backwards
+    if (command.equals("B")) //Backwards
     {
         softStop();
         Backwards(getLeftSpeed(), getRightSpeed());
     }
-    if (command == 'L') //Left turn
+    if (command.equals("L")) //Left turn
     {
         softStop();
         Left(getLeftSpeed(), getRightSpeed());
     }
     
-    if (command == 'R') //Right turn
+    if (command.equals("R")) //Right turn
     {
         softStop();
         Right(getLeftSpeed(), getRightSpeed());
     }
     
-    if (command == 'S') //Stop
+    if (command.equals("S")) //Stop
     {
         softStop();
         delay(1);
         Halt();
     }
-    if (command == 'C')
+    if (command.equals("C"))
     {
         //Calibrate sensors for line follower
         sensor_Cal();
     }
     
-    if(command == '1')
+    if(command.equals("1"))
     {
         setLeftSpeed(40);
         setRightSpeed(40);
     }
     
-    if(command == '2')
+    if(command.equals("2"))
     {
         setLeftSpeed(63);
         setRightSpeed(63);
     }
     
-    if(command == '3')
+    if(command.equals("3"))
     {
         setLeftSpeed(86);
         setRightSpeed(86);
     }
     
-    if(command == '4')
+    if(command.equals("4"))
     {
         setLeftSpeed(108);
         setRightSpeed(108);
     }
     
-    if(command == '5')
+    if(command.equals("5"))
     {
         setLeftSpeed(130);
         setRightSpeed(130);
     }
     
-    if(command == '6')
+    if(command.equals("6"))
     {
         setLeftSpeed(153);
         setRightSpeed(153);
     }  
       
-    if(command == '7')
+    if(command.equals("7"))
     {
         setLeftSpeed(176);
         setRightSpeed(176);
     }
     
-    if(command == '8')
+    if(command.equals("8"))
     {
         setLeftSpeed(200);
         setRightSpeed(200);
     }
     
-    if(command == '9')
+    if(command.equals("9"))
     {
         setLeftSpeed(255);
         setRightSpeed(255);
     }
     
-    if (command == 'O') 
+    if (command.equals("O")) 
     {
         Halt();
         delay(10);
@@ -126,6 +147,7 @@
         delay(50);
         asm volatile ("  jmp 0"); //Resets the Arduino
     }
+    
  }
 
  void speaker_on()

@@ -7,6 +7,7 @@ REFERENCE: https://www.youtube.com/watch?v=zg0Kx7rP8lE
 
 - SB-002 sensor aquistion and calibration
 - Line following Mode simple, intermediate and advanced
+- Communications Module now accepts multi-character commands and detects NL and CR characters automatically
 
 # Op Modes
 
