@@ -1,12 +1,11 @@
 # FOR USE WITH SB-001, SB-001A OR SB-002 
 
-REFERENCE:
-REFERENCE: 
+REFERENCE: https://www.l33t.uk/arduino_projects/mipr/future-enhancements/
 
 # New Features in Version 0.7
 
 - Support for SDK version 1.0.0
-- Mode 5 refactored, now works with anytime in mS and single command blocks
+- Mode 5 re-factored
 - Memory usage optimised freeing up some RAM
 
 # Op Modes
