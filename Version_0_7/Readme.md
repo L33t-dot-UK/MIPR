@@ -7,6 +7,7 @@ REFERENCE: https://www.l33t.uk/arduino_projects/mipr/future-enhancements/
 - Support for SDK version 1.0.0
 - Mode 5 re-factored
 - Memory usage optimised freeing up some RAM
+- SB001A getDist() function changed to include sensor.dataReady() clause when aquiring readings from the VL53L1X
 
 # Op Modes
 
