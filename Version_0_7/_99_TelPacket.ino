@@ -66,7 +66,7 @@ void build_Tel_Packet(String sensorBoard)
 }
 
 
-//I have rewritten this funciton (Op Mode 5) for version 0.7
+//I have rewritten this function (Op Mode 5) for version 0.7
 boolean executeInstruction()
 {
     //Used when in instruction mode

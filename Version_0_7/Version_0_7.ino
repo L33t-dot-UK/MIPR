@@ -1,10 +1,8 @@
       
 /*
- * MIPR Core Code Verison 0.6
- * https://www.l33t.uk/arduino_projects/mipr/
- * Copyright David Bradshaw 2019
- * 
- * For use with SB-002 (Line Follower)
+ * MIPR Core Code Verison 0.7
+ * https://www.l33t.uk/arduino_projects/mipr/sdk/
+ * Copyright David Bradshaw 2020
  * 
  */
 

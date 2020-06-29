@@ -1,6 +1,6 @@
 # FOR USE WITH SB-001, SB-001A OR SB-002 
 
-REFERENCE: https://www.l33t.uk/arduino_projects/mipr/future-enhancements/
+REFERENCE: https://www.l33t.uk/arduino_projects/mipr/sdk/
 
 # New Features in Version 0.7
 
