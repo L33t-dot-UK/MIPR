@@ -20,7 +20,9 @@ int loopTime = 0;
 int telPacketRefresh = 20;
 long telPacketTimer = 0;
 long telStartTimer = 0;
-    
+
+String telPacketType = "NIL";
+boolean telPacketEn = false;
 void setup() 
 {
     pinMode(2, OUTPUT);
@@ -82,7 +84,8 @@ void loop()
     {
         //The getDist call is below in the telPacketTimer if clause
         //This is so we don't request an update from the sensor too quickly
-        get_Sensor_Values(); //set these values in case we want to use them
+
+        get_Sensor_Values(); //incase we want to use these later
         if (OdoMod_Installed == true){build_Tel_Packet("SB001AT");} else {build_Tel_Packet("SB001AF");}
         if (telPacketRefresh < 50)
         {
@@ -121,7 +124,16 @@ void loop()
     }
     else if(opMode == '9')
     {
-        
+        //SDK Mode use this mode if you want to control MIPR using a program
+        if(telPacketEn) //Only build the telPacket if it is enabled
+        {
+            build_Tel_Packet(telPacketType);
+        }
+        else
+        {
+            Tel_Packet = ".";
+        }
+        heartBeat();
     }
     else
     {

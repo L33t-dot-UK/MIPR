@@ -1,0 +1,41 @@
+# FOR USE WITH SB-001, SB-001A OR SB-002 
+
+REFERENCE:
+REFERENCE: 
+
+# New Features in Version 0.7
+
+- Support for SDK version 1.0.0
+- Mode 5 refactored, now works with anytime in mS and single command blocks
+- Memory usage optimised freeing up some RAM
+
+# Op Modes
+
+To change the Op Mode open serial monitor and connect to MIPR type a capital O for Oscar and then select the desired Op Mode.
+Op Modes are as follows;
+
+- 0; Remote controlled
+- 1; Light Seeker
+- 2; Light Avoider
+- 3; Obstacle avoider
+- 4; Follow Mode
+- 5; Execute command
+- 6; Line Follower Mode; Simple
+- 7; Line Follower Mode; Intermediate
+- 8; Line Follower Mode; Advanced
+- 9; SDK Mode
+
+Modes 1 to 4 work with this code version once SB-001 or SB-001A have been inserted.
+
+# File Breakdown;
+
+- Version_0_6.ino - Main Arduino IDE file, contains setup and loop funcitons for MIPR
+- _01_Motor_Functions.ino - Contains functions to access MIPR's motor driver
+- _02_Communications.ino - Allows access to MIPR's bluetooth functions
+- _03_Odometry_Module.ino - Carries out basic odometry calculaitons
+- _04_Sensor_Board_001.ino - Provides functions for light seeking sensor board
+- _05_Sensor_Board_001A.ino - Provides functions for obstacle avoidance sensor board
+- _06_Line_Follower.ino
+- _07_SDK.ino
+- _99_TelPacket.ino - Builds the telemetry packet for broadcast via the Bluetooth module and monitors battery voltage
+

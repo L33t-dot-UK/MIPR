@@ -6,6 +6,7 @@ REFERENCE: https://www.youtube.com/watch?v=MS5ZbgQp-YA
 # New Features in Version 0.4
 
 - Code added for sensor board 001A giving MIPR the ability to detect obstacles
+- Op Mode 3 added for basic path finding
 
 # Op Modes
 

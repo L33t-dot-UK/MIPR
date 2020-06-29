@@ -7,8 +7,8 @@
  * 
  */
 
-int enRight = 9;
-int enLeft = 5;
+int enRight = 5;
+int enLeft = 9;
 int i1A = 4; 
 int i2A = 3;
 int i3A = 8;

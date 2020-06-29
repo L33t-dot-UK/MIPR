@@ -73,8 +73,13 @@ void loop()
     {
         //The getDist call is below in the telPacketTimer if clause
         //This is so we don't request an update from the sensor too quickly
-         get_Sensor_Values(); //set these values in case we want to use them
-         if (OdoMod_Installed == true){build_Tel_Packet("SB001AT");} else {build_Tel_Packet("SB001AF");}
+        get_Sensor_Values(); //set these values in case we want to use them
+        if (OdoMod_Installed == true){build_Tel_Packet("SB001AT");} else {build_Tel_Packet("SB001AF");}
+        if (telPacketRefresh < 50)
+        {
+            telPacketRefresh = 50; //If we get measurements from the VL53L1 sensor quicker than this the code will be blocked
+                                    //Minmum refresh rate in mode 3 is 50mS.
+        }
     }
     else
     {
