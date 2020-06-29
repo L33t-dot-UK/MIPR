@@ -15,7 +15,7 @@
 VL53L1X sensor;
 int maxDistance = 2000;
 
-int dirCounter = 0;
+byte dirCounter = 0;
 int global_Distance = 0;
 
 void setup_Sensor()
@@ -28,14 +28,14 @@ void setup_Sensor()
     
     if (!sensor.init())
     {
-         Serial.println("VL53L1X Fails to startup");
+         //Serial.println("VL53L1X Fails to startup");
     }
     else
     {
         sensor.setDistanceMode(VL53L1X::Long);
         sensor.setMeasurementTimingBudget(50000); //Timing budget is 50mS
         sensor.startContinuous(50); //Get a new value every 50mS
-        Serial.println("SB001A Setup");
+        //Serial.println("SB001A Setup");
     }
 }
 int getDist()

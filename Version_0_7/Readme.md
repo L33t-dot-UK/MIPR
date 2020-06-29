@@ -5,7 +5,9 @@ REFERENCE:
 
 # New Features in Version 0.7
 
-
+- Support for SDK version 1.0.0
+- Mode 5 refactored, now works with anytime in mS and single command blocks
+- Memory usage optimised freeing up some RAM
 
 # Op Modes
 

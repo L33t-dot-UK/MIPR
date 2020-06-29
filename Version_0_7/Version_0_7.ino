@@ -18,11 +18,38 @@ int startTime = 0;
 int loopTime = 0;
 
 int telPacketRefresh = 20;
-long telPacketTimer = 0;
+int telPacketTimer = 0;
 long telStartTimer = 0;
 
 String telPacketType = "NIL";
 boolean telPacketEn = false;
+
+/*
+ * Verison 0.7 memory improvements
+ * All strings will be declared here and saved to PROGMEM in order to free up some RAM
+ * Strings use alot of space in RAM and by doing this we will save 316 bytes which is around 16% of available RAM for an Arduino Pro Mini
+ */
+
+    #include <avr/pgmspace.h>
+    
+    char buffer[120]; //120 characters maximum size of any string message, if you need to save RAM you can decrease this and truncate the below strings
+    
+    const char string_0[] PROGMEM = "MIPR Started in mode ";
+    const char string_1[] PROGMEM = "Setting up SB002";
+    const char string_2[] PROGMEM = "Enter mode and press enter: ";
+    const char string_3[] PROGMEM = "Sensors calibrated, baseline value:  ";
+    const char string_4[] PROGMEM = "The sensors are saturated. If you are in an area of high IR activity either shield the robot or use different value resistors on SB-002";  //116 characters long
+    const char string_5[] PROGMEM = "Put all sensors over a white background and wait for a beep";
+    const char string_6[] PROGMEM = "Battery Voltage too Low, resting for 10 seconds";
+    const char string_7[] PROGMEM = "Battery Voltage too Low ";
+    const char string_8[] PROGMEM = " Volts";
+    const char string_9[] PROGMEM = "Restarting MIPR in new mode"; 
+    const char string_10[] PROGMEM = "Enter your command followed by the amount of time to execute the command for i.e. F:200 move forwards for 200mS";
+    const char string_11[] PROGMEM = "The commands are as follows F, B, L, R follow each command with a colon and time";
+    const char string_12[] PROGMEM = "Executing command: ";
+    
+    const char *const string_table[] PROGMEM = {string_0, string_1, string_2, string_3, string_4, string_5, string_6, string_7, string_8, string_9, string_10, string_11, string_12}; //Save all strings in a table
+
 void setup() 
 {
     pinMode(2, OUTPUT);
@@ -34,19 +61,20 @@ void setup()
     }
     
     opMode = int(EEPROM.read(5));  
-    Serial.print("MIPR Started in mode ");
+    strcpy_P(buffer, (char *)pgm_read_word(&(string_table[0])));
+    Serial.print(buffer);
     Serial.println(opMode);
     delay(100);
     
     if(opMode == '3' || opMode == '4')
     {
-        Serial.println("Setting up SB001A");
         setup_Sensor();
     }
 
     if (opMode == '6' || opMode == '7' || opMode == '8')
     {
-        Serial.println("Setting up SB002");
+        strcpy_P(buffer, (char *)pgm_read_word(&(string_table[1])));
+        Serial.println(buffer);
         line_FollowerSetup();
     }
   

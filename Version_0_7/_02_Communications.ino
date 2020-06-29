@@ -137,7 +137,8 @@
     {
         Halt();
         delay(10);
-        Serial.print("Enter mode and press enter: ");
+        strcpy_P(buffer, (char *)pgm_read_word(&(string_table[2])));
+        Serial.print(buffer);
         delay(50);
         String tmp = Serial.readString(); //Read data out of the buffer
         delay(50);
@@ -147,6 +148,7 @@
         } 
         String iString = Serial.readString();
         Serial.print(iString);
+        strcpy_P(buffer, (char *)pgm_read_word(&(string_table[9])));
         Serial.println("Restarting MIPR in new mode");
         char mode = iString.charAt(0);
 

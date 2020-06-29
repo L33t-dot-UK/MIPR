@@ -434,8 +434,9 @@ void sensor_Cal()
     speaker_on();
     delay(450);
     speaker_off();
-    
-    Serial.println("Put all sensors over a white background and wait for a beep");
+
+    strcpy_P(buffer, (char *)pgm_read_word(&(string_table[5])));
+    Serial.println(buffer);
     delay(500);
 
     int bechmarkM = 0; //Benchmark value all other sensors will align themselves with this value
@@ -478,7 +479,8 @@ void sensor_Cal()
 
     if (baseLineValue == 1023)
     {
-        Serial.println("The sensors are saturated. If you are in an area of high IR activity either shield the robot or use different value resistors on SB-002");
+        strcpy_P(buffer, (char *)pgm_read_word(&(string_table[4])));
+        Serial.println(buffer);
         speaker_on();
         delay(5000);
         speaker_off();
@@ -493,7 +495,8 @@ void sensor_Cal()
     speaker_on();
     delay(450);
     speaker_off();
-    Serial.print("Sensors calibrated, baseline value:  ");
+    strcpy_P(buffer, (char *)pgm_read_word(&(string_table[3])));
+    Serial.print(buffer);
     Serial.println(baseLineValue);
 
     isCald = true;

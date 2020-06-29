@@ -7,7 +7,7 @@
   */
 
 
-//Defines the character to be used to seperate commands and values i.e. REFF:20 the command would be REFF and value 20
+//Defines the character to be used to seperate commands and values i.e. REF:20 the command would be REF and value 20
 char parseChar = ':';
 
 void executeSDKcommand(String command)
@@ -150,6 +150,7 @@ void executeSDKcommand(String command)
         }
         else if (command.equals("ENODO")) 
         {
+            getEEPROM_Values();
             OdoMod_Installed = true;
         }
         else if (command.equals("DIODO")) 
@@ -180,7 +181,6 @@ void executeSDKcommand(String command)
         }
         
     }
-    Serial.println(command); //Return the command as a acknowledgment THIS COULD BE MOVED!!!!!!!!
 }
 
 //The heartBeat will update sensor values depending on what Tel Packet has been chosen if any
@@ -255,7 +255,7 @@ String parseCommand(String command)
 String parseValue(String command)
 {
     String retVal = "";
-    for (int ii = 0; ii < command.length(); ii++)
+    for (byte ii = 0; ii < command.length(); ii++)
     {   
         if(command.charAt(ii) == parseChar)
         {

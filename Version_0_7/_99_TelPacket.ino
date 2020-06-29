@@ -11,11 +11,11 @@ void build_Tel_Packet(String sensorBoard)
     Tel_Packet = ".";
     if (sensorBoard == "NILT") //No sensor board with Odometry Module
     {
-        Tel_Packet = (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime;
+        Tel_Packet =  (String)left_Velocity  + ',' +  (String)leftMotorStatus  + ',' + (String)right_Velocity + ',' + (String)rightMotorStatus  + ',' + (String)battVoltage + ',' + (String)loopTime;
     }
     else if (sensorBoard == "SB001T") //SB001 with Odometry Module
     {
-        Tel_Packet = (String)getLeftSensorVal()  + ',' +  (String)getRightSensorVal() + ',' +  (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime;
+        Tel_Packet = (String)getLeftSensorVal()  + ',' +  (String)getRightSensorVal() + ',' +  (String)left_Velocity  + ',' +  (String)leftMotorStatus  + ',' + (String)right_Velocity + ',' + (String)rightMotorStatus  + ',' + (String)battVoltage + ',' + (String)loopTime;
     }
     else if(sensorBoard == "SB001F")//SB001 without Odometry Module
     {
@@ -23,7 +23,7 @@ void build_Tel_Packet(String sensorBoard)
     }
     else if(sensorBoard == "SB001AT")//SB001A with Odometry Module
     {
-        Tel_Packet = String(global_Distance) + ',' + (String)getLeftSensorVal()  + ',' +  (String)getRightSensorVal() + ',' +  (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime;
+        Tel_Packet = String(global_Distance) + ',' + (String)getLeftSensorVal()  + ',' +  (String)getRightSensorVal() + ',' + (String)left_Velocity  + ',' +  (String)leftMotorStatus  + ',' + (String)right_Velocity + ',' + (String)rightMotorStatus  + ',' + (String)battVoltage + ',' + (String)loopTime;
     }
     else if(sensorBoard == "SB001AF")//SB001A without Odometry Module
     {
@@ -31,7 +31,7 @@ void build_Tel_Packet(String sensorBoard)
     }
     else if(sensorBoard == "SB002T")//SB002 with Odometry Module
     {
-        Tel_Packet = (String)leftOVal + ',' + (String)leftMVal + ',' + (String)midVal + ',' + (String)rightMVal + ',' + (String)rightOVal + ',' + (String)Input + ',' + (String)Output + ',' + (String)lrErr + ',' + (String)left_Velocity  + ',' +  (String)right_Velocity + ',' + (String)battVoltage + ',' + (String)loopTime;
+        Tel_Packet = (String)leftOVal + ',' + (String)leftMVal + ',' + (String)midVal + ',' + (String)rightMVal + ',' + (String)rightOVal + ',' + (String)Input + ',' + (String)Output + ',' + (String)lrErr + ',' + (String)left_Velocity  + ',' +  (String)leftMotorStatus  + ',' + (String)right_Velocity + ',' + (String)rightMotorStatus  + ',' + (String)battVoltage + ',' + (String)loopTime;
     }
     else if(sensorBoard == "SB002F")//SB002 without Odometry Module
     {
@@ -42,7 +42,8 @@ void build_Tel_Packet(String sensorBoard)
     {
         if (isFirst == true)
         {
-            Serial.print("Battery Voltage too Low, resting for 10 seconds");
+            strcpy_P(buffer, (char *)pgm_read_word(&(string_table[6])));
+            Serial.print(buffer);
             //stop the motors and rest for 10 seconds allowing the load to be taken off the battery
             digitalWrite(13, HIGH); //Turn on the Arduino's LED indicating that the robot is resting for 10 seconds
             Halt();
@@ -52,9 +53,11 @@ void build_Tel_Packet(String sensorBoard)
         }
         else
         {
-            Serial.print("Battery Voltage too Low ");
+            strcpy_P(buffer, (char *)pgm_read_word(&(string_table[7])));
+            Serial.print(buffer);
             Serial.print(battVoltage);
-            Serial.println(" Volts");
+            strcpy_P(buffer, (char *)pgm_read_word(&(string_table[8])));
+            Serial.println(buffer);
             Halt();
             speaker_on();
             while(1){} //infinate loop so the robot will not respond
@@ -62,11 +65,14 @@ void build_Tel_Packet(String sensorBoard)
     }    
 }
 
+
+//I have rewritten this funciton (Op Mode 5) for version 0.7
 boolean executeInstruction()
 {
     //Used when in instruction mode
     Halt();
-        Serial.println("Enter the direction that you want MIPR to move in L == left, R == right, F == forward and B == backwards");
+    strcpy_P(buffer, (char *)pgm_read_word(&(string_table[10])));
+        Serial.println(buffer);
         delay(50);
         String tmp = Serial.readString(); //Read data out of the buffer
         delay(50);
@@ -76,19 +82,11 @@ boolean executeInstruction()
         } 
         String iString = Serial.readString();
 
-        iString = iString.substring(0,1);
-        if (iString.equals("L") || iString.equals("R") || iString.equals("F") || iString.equals("B"))
+        String cString = parseCommand(iString);
+        if (cString.equals("L") || cString.equals("R") || cString.equals("F") || cString.equals("B"))
         {
             //Legal option
-            Serial.println("Enter movement time in milli seconds, this must be between 1 and 999");
-            tmp = Serial.readString(); //Read data out of the buffer
-            delay(50);
-            while(Serial.available() == 0)
-            {
-                //Wait for data input
-            } 
-            String iTime = Serial.readString();
-            iTime = iTime.substring(0,3);
+            String iTime = parseValue(iString);
             
             //Now execute the command, no sensing will work when the command is being executed
             int i_Time = iTime.toInt(); //cast the String variable to an integer
@@ -96,8 +94,9 @@ boolean executeInstruction()
             int elapsedTime = 0;
             int m5startTime = millis();
 
-            Serial.print("Executing command:: ");
-            Serial.print(iString);
+            strcpy_P(buffer, (char *)pgm_read_word(&(string_table[12])));
+            Serial.print(buffer);
+            Serial.print(cString);
             Serial.print( " for ");
             Serial.print(i_Time);
             Serial.println(" mS");
@@ -105,21 +104,21 @@ boolean executeInstruction()
             while(elapsedTime < i_Time)
             {
                 elapsedTime = millis() - m5startTime;
-                if (iString.equals("F"))
-                {
-                    Forwards(96,96);
+                if (cString.equals("F"))
+                {   
+                    Forwards(dLeftSpeed,dLeftSpeed);
                 }
-                else if (iString.equals("B"))
+                else if (cString.equals("B"))
                 {
-                    Backwards(96,96);
+                    Backwards(dLeftSpeed,dLeftSpeed);
                 }
-                else if (iString.equals("R"))
+                else if (cString.equals("R"))
                 {
-                    Right(54,54);
+                    Right(dLeftSpeed,dLeftSpeed);
                 }
-                else if (iString.equals("L"))
+                else if (cString.equals("L"))
                 {
-                    Left(54,54);
+                    Left(dLeftSpeed,dLeftSpeed);
                 }
             }
             Halt();
