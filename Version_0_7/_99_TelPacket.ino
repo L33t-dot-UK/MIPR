@@ -82,6 +82,20 @@ boolean executeInstruction()
         } 
         String iString = Serial.readString();
 
+        //STRIP OFF NEWLINE AND CARRIAGE RETURN CHARACTERS IF THEY ARE PRESENT
+        if(iString.substring(iString.length() - 2, iString.length()).equals("\r\n")) //Detect NL and CR, we need to remove this
+        {
+            iString = iString.substring(0,iString.length() - 2);
+        }
+        else if(iString.substring(iString.length() - 1, iString.length()).equals("\n")) //Detect a NL, we need to remove this
+        {
+            iString = iString.substring(0,iString.length() - 1);
+        }
+        else if(iString.substring(iString.length() - 1, iString.length()).equals("\r")) //Detect a CR, we need to remove this
+        {
+            iString = iString.substring(0,iString.length() - 1);
+        }
+    
         String cString = parseCommand(iString);
         if (cString.equals("L") || cString.equals("R") || cString.equals("F") || cString.equals("B"))
         {
@@ -126,6 +140,7 @@ boolean executeInstruction()
         }
         else if (iString.equals("O"))
         {
+           Serial.println("OOOOOOOOOOOOOOOO Sir");
            EEPROM.write(5, '0');
            delay(50);
            asm volatile ("  jmp 0"); //Resets the Arduino
