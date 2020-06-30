@@ -61,8 +61,6 @@
     
     else if (command.equals("S")) //Stop
     {
-        softStop();
-        delay(1);
         Halt();
     }
     else if (command.equals("C"))

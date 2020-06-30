@@ -10,6 +10,10 @@ import sys
 import time
 import keyboard
 
+from turtle import *
+color('red', 'yellow')
+begin_fill()
+
 try:
 	#SETUP THE SERIAL PORT
 	ser = serial.Serial('COM11', 57600, timeout=0, parity=serial.PARITY_EVEN, rtscts=0) #connect to the serial port, you might need to change the comm port
@@ -31,47 +35,60 @@ try:
 		ser.write(b'9') #Put into Op Mode 9 SDK
 		time.sleep(0.05)
 
+	ser.write(b'SPD:124') #send the GOM command to get the Op Mode
+	time.sleep(0.05)
+
 	print('W = FORWARDS, S = BACKWARDS, A = LEFT, D = RIGHT, O = STOP, 1 -9 WILL SET YOUR SPEED')
 	while True: #Loop forever
 		time.sleep(0.02)
 		if keyboard.is_pressed('S') or keyboard.is_pressed('s'):
-			ser.write(b'S')
+			time.sleep(0.01)
+			ser.write(b'SPD:124')
 			time.sleep(0.01)
 			ser.write(b'B')
-		if keyboard.is_pressed('W') or keyboard.is_pressed('w'):
-			ser.write(b'S')
+			backward(1)
+		elif keyboard.is_pressed('W') or keyboard.is_pressed('w'):
+			time.sleep(0.01)
+			ser.write(b'SPD:124')
 			time.sleep(0.01)
 			ser.write(b'F')
-		if keyboard.is_pressed('A') or keyboard.is_pressed('a'):
-			ser.write(b'S')
+			forward(1)
+		elif keyboard.is_pressed('A') or keyboard.is_pressed('a'):
+			time.sleep(0.01)
+			ser.write(b'SPD:64') #send the GOM command to get the Op Mode
 			time.sleep(0.01)
 			ser.write(b'L')
-		if keyboard.is_pressed('D') or keyboard.is_pressed('d'):
-			ser.write(b'S')
+			left(32)
+		elif keyboard.is_pressed('D') or keyboard.is_pressed('d'):
+			time.sleep(0.01)
+			ser.write(b'SPD:64') #send the GOM command to get the Op Mode
 			time.sleep(0.01)
 			ser.write(b'R')
-		if keyboard.is_pressed('O') or keyboard.is_pressed('o'):
-			ser.write(b'S')
+			right(32)
+		elif keyboard.is_pressed('O') or keyboard.is_pressed('o'):
 			time.sleep(0.01)
 			ser.write(b'S')
-		if keyboard.is_pressed('1'):
+		elif keyboard.is_pressed('1'):
 			ser.write(b'1')
-		if keyboard.is_pressed('2'):
+		elif keyboard.is_pressed('2'):
 			ser.write(b'2')
-		if keyboard.is_pressed('3'):
+		elif keyboard.is_pressed('3'):
 			ser.write(b'3')
-		if keyboard.is_pressed('4'):
+		elif keyboard.is_pressed('4'):
 			ser.write(b'4')
-		if keyboard.is_pressed('5'):
+		elif keyboard.is_pressed('5'):
 			ser.write(b'5')
-		if keyboard.is_pressed('6'):
+		elif keyboard.is_pressed('6'):
 			ser.write(b'6')
-		if keyboard.is_pressed('7'):
+		elif keyboard.is_pressed('7'):
 			ser.write(b'7')
-		if keyboard.is_pressed('8'):
+		elif keyboard.is_pressed('8'):
 			ser.write(b'8')
-		if keyboard.is_pressed('9'):
+		elif keyboard.is_pressed('9'):
 			ser.write(b'9')
+		else:
+			time.sleep(0.01)
+			ser.write(b'S')
 	
 except:
 	print('Can not connect please check the COMM port and ensure that MIPR is switched on') 

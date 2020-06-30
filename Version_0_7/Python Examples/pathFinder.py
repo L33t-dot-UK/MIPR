@@ -14,6 +14,10 @@ import sys
 import time
 import keyboard
 
+from turtle import *
+color('red', 'yellow')
+begin_fill()
+
 try:
 	#SETUP THE SERIAL PORT
 	ser = serial.Serial('COM11', 57600, timeout=0, parity=serial.PARITY_EVEN, rtscts=0) #connect to the serial port, you might need to change the comm port
@@ -66,6 +70,7 @@ try:
 					ser.write(b'SPD:96') #Set the speed to 200
 					time.sleep(0.01)
 					ser.write(b'F')
+					forward(3)
 
 				if intMsg < 500:
 
@@ -74,16 +79,18 @@ try:
 						ser.write(b'SPD:64') #Set the speed to 64, we must corner slowly due to the vl53l1x refresh rate
 						time.sleep(0.01)
 						ser.write(b'R')
+						right(32)
 
 					if dirCounter > 20:
 						dirCounter = dirCounter + 1
 						ser.write(b'SPD:64') #Set the speed to 64, we must corner slowly due to the vl53l1x refresh rate
 						time.sleep(0.01)
 						ser.write(b'L')
+						left(32)
 
 				if dirCounter > 40:
 					dirCounter = 0
 			except:
-				print('can\'t convert')
+				print('Basic Path Finding Algorithm Executing type S to stop')
 except:
 	print('Can not connect please check the COMM port and ensure that MIPR is switched on') 
