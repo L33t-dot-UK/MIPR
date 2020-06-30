@@ -156,8 +156,10 @@
         delay(50);
         asm volatile ("  jmp 0"); //Resets the Arduino
     }
-
-    //SDK commands, will only execute if the above commands has not been used
+    else if (command.equals("GOM")) //Get Op Mode
+    {
+        Serial.println(opMode);
+    }
     else if (opMode == '9')
     {
         executeSDKcommand(command);

@@ -8,6 +8,7 @@ REFERENCE: https://www.l33t.uk/arduino_projects/mipr/sdk/
 - Mode 5 re-factored
 - Memory usage optimised freeing up some RAM
 - SB001A getDist() function changed to include sensor.dataReady() clause when aquiring readings from the VL53L1X
+- Example Python scripts in the Python Examples folder; to get these working install V0.7 on your Arduino and run the scripts. You might need to change the COMM port in the python script
 
 # Op Modes
 
