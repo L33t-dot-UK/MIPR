@@ -10,6 +10,8 @@ REFERENCE: https://www.l33t.uk/arduino_projects/mipr/sdk/
 - SB001A getDist() function changed to include sensor.dataReady() clause when aquiring readings from the VL53L1X
 - Example Python scripts in the Python Examples folder; to get these working install V0.7 on your Arduino and run the scripts. You might need to change the COMM port in the python script
 
+For a list of commands that can be used with the SDK open SDK_Manual.pdf.
+
 # Op Modes
 
 To change the Op Mode open serial monitor and connect to MIPR type a capital O for Oscar and then select the desired Op Mode.
@@ -39,4 +41,5 @@ Modes 1 to 4 work with this code version once SB-001 or SB-001A have been insert
 - _06_Line_Follower.ino
 - _07_SDK.ino
 - _99_TelPacket.ino - Builds the telemetry packet for broadcast via the Bluetooth module and monitors battery voltage
+- SDK_Manual.pdf
 
