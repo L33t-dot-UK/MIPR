@@ -77,7 +77,7 @@ try:
 
 					if dirCounter > 20:
 						dirCounter = dirCounter + 1
-						ser.write(b'SPD:64')
+						ser.write(b'SPD:64') #Set the speed to 64, we must corner slowly due to the vl53l1x refresh rate
 						time.sleep(0.01)
 						ser.write(b'L')
 
