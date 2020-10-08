@@ -19,7 +19,7 @@ color('red', 'yellow')
 begin_fill()
 
 try:
-	#SETUP THE SERIAL PORT
+        #SETUP THE SERIAL PORT
 	ser = serial.Serial('COM11', 57600, timeout=0, parity=serial.PARITY_EVEN, rtscts=0) #connect to the serial port, you might need to change the comm port
 	time.sleep(3) #wait for MIPR to boot up
 	msg = ser.read(500) #Read whatever is in the buffer

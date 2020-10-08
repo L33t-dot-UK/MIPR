@@ -5,6 +5,7 @@
  * 
  */
 boolean isFirst = true;
+String lineEnding = ";";
 
 void build_Tel_Packet(String sensorBoard)
 {
@@ -12,6 +13,10 @@ void build_Tel_Packet(String sensorBoard)
     if (sensorBoard == "NILT") //No sensor board with Odometry Module
     {
         Tel_Packet =  (String)left_Velocity  + ',' +  (String)leftMotorStatus  + ',' + (String)right_Velocity + ',' + (String)rightMotorStatus  + ',' + (String)battVoltage + ',' + (String)loopTime;
+    }
+    else if (sensorBoard == "ODO") //SB001 with Odometry Module
+    {
+        Tel_Packet =  (String)left_Velocity  + ',' +  (String)right_Velocity;
     }
     else if (sensorBoard == "SB001T") //SB001 with Odometry Module
     {

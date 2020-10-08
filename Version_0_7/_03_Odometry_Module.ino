@@ -50,12 +50,30 @@ long right_Refresh_Time = 0;
 boolean Left_Motor_Stopped = false;
 boolean Right_Motor_Stopped = false;
 
+//Averaged Data
+const int binSize = 4;
+float lftVals[binSize]; 
+float rgtVals[binSize];
+float lftAv = 0;
+float rgtAv = 0;
+byte odoLCntr = 0;
+byte odoRCntr = 0;
+
 //Sample the analog waveform and set valus to coarse and fine RPS from this the velocity can
 //be calculated.
 //We only sample the part of the waveform thats above the mean level, this saves time and
 //makes the code simpler. Because of this we guess how long the negative part of the waveform
 //will be and in this case we use the figure of 2.3 multiplied by the possitive portion of the 
 //waveform.
+
+void clearAveragedData()
+{
+    for(int ii = 0; ii < binSize; ii++)
+    {
+        lftVals[ii] = 0;
+        rgtVals[ii] = 0;
+    }
+}
 void SampleWaveForm(boolean reset_Vars)
 {
     battV = analogRead(battVpin);
@@ -69,12 +87,14 @@ void SampleWaveForm(boolean reset_Vars)
         right_Wheel_Pit_Counter = 0;
         left_Wheel_Rot_Timer = millis();
         right_Wheel_Rot_Timer = millis();
+        clearAveragedData();
     }
 
-    if((millis() - left_Refresh_Time) > 200) { Left_Motor_Stopped = true;}
+    //If we don't get a refresh within 200mS assume that the wheel has stopped
+    if((millis() - left_Refresh_Time) > 400) { Left_Motor_Stopped = true;}
     else{Left_Motor_Stopped = false;}
     
-    if((millis() - right_Refresh_Time) > 200) { Right_Motor_Stopped = true;}
+    if((millis() - right_Refresh_Time) > 400) { Right_Motor_Stopped = true;}
     else { Right_Motor_Stopped = false;}
     
     if (Left_Motor_Stopped == true)
@@ -83,7 +103,8 @@ void SampleWaveForm(boolean reset_Vars)
         left_Wheel_RPS_Fine = 0;
         left_Timer_Enabled = false;
         left_Wheel_Pit_Counter = 0;
-        left_Wheel_Rot_Timer = millis();     
+        left_Wheel_Rot_Timer = millis();    
+        clearAveragedData(); 
     }
     if (Right_Motor_Stopped == true)
     {
@@ -92,6 +113,7 @@ void SampleWaveForm(boolean reset_Vars)
         right_Timer_Enabled = false;
         right_Wheel_Pit_Counter = 0;
         right_Wheel_Rot_Timer = millis(); 
+        clearAveragedData();
     }
 
     int reading = analogRead(leftMotorSensor); //left wheel
@@ -121,6 +143,14 @@ void SampleWaveForm(boolean reset_Vars)
             left_Pulsewidth = left_Pulsewidth * 2.3; //Use 2.3 because of the ratio between the holes and black part of the wheel
             left_Wheel_RPS_Fine = 1000 / float(left_Pulsewidth * wheel_Pits);
             left_Timer_Enabled = false;
+
+            lftVals[odoLCntr] = left_Wheel_RPS_Fine;
+            odoLCntr = odoLCntr + 1;
+            if (odoLCntr == binSize)
+            {
+                odoLCntr = 0; //Cycle the counter
+            }
+            
             calc_Velocity();
         }
     }
@@ -152,6 +182,14 @@ void SampleWaveForm(boolean reset_Vars)
             right_Pulsewidth = right_Pulsewidth * 2.3; //Use 2.3 because of the ratio between the holes and black part of the wheel
             right_Wheel_RPS_Fine = 1000 / float(right_Pulsewidth * wheel_Pits);
             right_Timer_Enabled = false;
+
+            rgtVals[odoRCntr] = right_Wheel_RPS_Fine;
+            odoRCntr = odoRCntr + 1;
+            if (odoRCntr == binSize)
+            {
+                odoRCntr = 0; //Cycle the counter
+            }
+            
             calc_Velocity();
         }
     }  
@@ -159,11 +197,36 @@ void SampleWaveForm(boolean reset_Vars)
 }
 
 //Calculates the velocity in CM per Second
+/*
+ * This isn't properly tested yet
+ */
 float calc_Velocity()
 {
-    left_Velocity = (left_Wheel_RPS_Coarse * wheel_Cir);
-    right_Velocity = (right_Wheel_RPS_Coarse * wheel_Cir);
-    
+    //Old stuff
+    //left_Velocity = left_Wheel_RPS_Coarse * wheel_Cir;
+    //right_Velocity = right_Wheel_RPS_Coarse * wheel_Cir;
+
+    left_Velocity = 0;
+    for(int ii = 0; ii < binSize; ii++)
+    {
+        left_Velocity = left_Velocity + lftVals[ii];
+    }
+
+    left_Velocity = left_Velocity / binSize;
+    left_Wheel_RPS_Fine = (left_Velocity + left_Wheel_RPS_Fine) / 2;
+    left_Velocity = 0;
+    left_Velocity = left_Wheel_RPS_Fine * wheel_Cir;   
+
+    right_Velocity = 0;
+    for(int ii = 0; ii < binSize; ii++)
+    {
+        right_Velocity = right_Velocity + rgtVals[ii];
+    }
+
+    right_Velocity = right_Velocity / binSize;
+    right_Wheel_RPS_Fine = (right_Velocity + right_Wheel_RPS_Fine) / 2;
+    right_Velocity = 0;
+    right_Velocity = right_Wheel_RPS_Fine * wheel_Cir;   
 }
 
 void getEEPROM_Values()
@@ -179,7 +242,7 @@ void getEEPROM_Values()
     }
     else
     {
-        Serial.println("No values found; cALIBRATION must be ran before using the Odometry Module");
+        Serial.println("No values found; Calibration must be ran before using the Odometry Module");
         while(1)
         {
             speaker_on();

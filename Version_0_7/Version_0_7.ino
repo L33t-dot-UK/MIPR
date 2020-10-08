@@ -1,3 +1,4 @@
+
       
 /*
  * MIPR Core Code Verison 0.7
@@ -8,7 +9,7 @@
 
 #include <EEPROM.h>
 
-boolean OdoMod_Installed = false; //Change this to false if you do not have the odometry module installed
+boolean OdoMod_Installed = true; //Change this to false if you do not have the odometry module installed
 String Tel_Packet = ".";
 char opMode = '0'; //Operating mode 0 == Remote control, 1 == LDR Board seek, 2 == LDR avoid, 3 == object sense, 4 == object follow, 5 == instruction mode
 
@@ -22,6 +23,7 @@ long telStartTimer = 0;
 String telPacketType = "NIL";
 boolean telPacketEn = false;
 
+boolean toResetOdo = false;
 /*
  * Verison 0.7 memory improvements
  * All strings will be declared here and saved to PROGMEM in order to free up some RAM
@@ -90,7 +92,7 @@ void setup()
 void loop() 
 {
     startTime = millis();
-
+    toResetOdo = false; //Always set to false, this will be changed by the motor class if needed
     if (opMode == '0')
     {
         //Do Nothing
@@ -150,6 +152,8 @@ void loop()
     }
     else if(opMode == '9')
     {
+        Forwards(128,128);
+        /*
         //SDK Mode use this mode if you want to control MIPR using a program
         if(telPacketEn) //Only build the telPacket if it is enabled
         {
@@ -160,6 +164,7 @@ void loop()
             Tel_Packet = ".";
         }
         heartBeat();
+        */
     }
     else
     {
@@ -168,7 +173,7 @@ void loop()
 
     if (OdoMod_Installed == true)
     {
-        SampleWaveForm(false); //calc velocity data from odo module
+        SampleWaveForm(toResetOdo); //calc velocity data from odo module
         calc_Velocity();
     }
 

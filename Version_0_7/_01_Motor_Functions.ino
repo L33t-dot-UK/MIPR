@@ -20,6 +20,20 @@ int dRightSpeed = 124;
 char leftMotorStatus = 'S';
 char rightMotorStatus = 'S';
 
+char lastMovement = 'S';
+
+boolean checkDirection(char curDirection, char prevDirection)
+{
+    if (curDirection == prevDirection)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 void Forwards(int leftSpeed, int rightSpeed)
 {
     //Allows us to use negative speeds to make the robot go backwards
@@ -58,7 +72,8 @@ void Forwards(int leftSpeed, int rightSpeed)
         leftMotorStatus = 'F';
         rightMotorStatus = 'F';
     }
-
+    toResetOdo = checkDirection('F', lastMovement);
+    lastMovement = 'F';
 }
 void Backwards(int leftSpeed, int rightSpeed)
 {
@@ -70,6 +85,8 @@ void Backwards(int leftSpeed, int rightSpeed)
     analogWrite(enRight, rightSpeed);
     leftMotorStatus = 'B';
     rightMotorStatus = 'B';
+    toResetOdo = checkDirection('B', lastMovement);
+    lastMovement = 'B';
 }
 void Left(int leftRotationSpeed, int rightRotationSpeed)
 {
@@ -81,6 +98,8 @@ void Left(int leftRotationSpeed, int rightRotationSpeed)
     analogWrite(enRight, rightRotationSpeed);
     leftMotorStatus = 'B';
     rightMotorStatus = 'F';
+    toResetOdo = checkDirection('L', lastMovement);
+    lastMovement = 'L';
 }
 void Right(int leftRotationSpeed, int rightRotationSpeed)
 {
@@ -92,6 +111,8 @@ void Right(int leftRotationSpeed, int rightRotationSpeed)
     analogWrite(enRight, rightRotationSpeed);
     leftMotorStatus = 'F';
     rightMotorStatus = 'B';
+    toResetOdo = checkDirection('R', lastMovement);
+    lastMovement = 'R';
 } 
 void Halt()
 {
@@ -103,6 +124,8 @@ void Halt()
     analogWrite(enRight, 0);
     leftMotorStatus = 'S';
     rightMotorStatus = 'S';
+    toResetOdo = checkDirection('S', lastMovement);
+    lastMovement = 'S';
 }
 
 void softStop()
@@ -111,6 +134,8 @@ void softStop()
     analogWrite(enRight, 0);
     leftMotorStatus = 'S';
     rightMotorStatus = 'S';
+    toResetOdo = checkDirection('S', lastMovement);
+    lastMovement = 'S';
 }
 
 //Helper funcitons to get information about the motors or to set certain parameters
