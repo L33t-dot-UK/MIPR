@@ -4,6 +4,8 @@ REFERENCE: https://www.l33t.uk/arduino_projects/mipr/sdk/
 
 # New Features in Version 0.7
 
+This version will be the final code version for MIPR. My focus will now be on MIPR Nano and a library for that robot.
+
 - Support for SDK version 1.0.0
 - Mode 5 re-factored
 - Memory usage optimised freeing up some RAM
