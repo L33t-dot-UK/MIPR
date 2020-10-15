@@ -105,10 +105,14 @@ void followMode(int targetDistance)
     
     if (distance > targetDistance)
     {
+        softStop();
+        delay(50);
         Forwards(diff,diff);   
     }
     else if (distance < targetDistance)
     {
+        softStop();
+        delay(50);
         Backwards(diff,diff);
     }
     else
